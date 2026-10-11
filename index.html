@@ -1,0 +1,4331 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#05070f" />
+    <meta name="color-scheme" content="dark" />
+    <title>Web Dev and Cybersecurity</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap"
+    />
+    <style>
+      @property --ar {
+        syntax: "<number>";
+        inherits: true;
+        initial-value: 34;
+      }
+      @property --ag {
+        syntax: "<number>";
+        inherits: true;
+        initial-value: 211;
+      }
+      @property --ab {
+        syntax: "<number>";
+        inherits: true;
+        initial-value: 238;
+      }
+      :root {
+        --bg: #05070f;
+        --ink: #eef3ff;
+        --muted: #93a6cc;
+        --line: rgba(150, 176, 230, 0.22);
+        --cy: #22d3ee;
+        --vi: #a78bfa;
+        --pk: #f472b6;
+        --li: #a3e635;
+        --am: #fbbf24;
+        --rd: #fb7185;
+        --ar: 34;
+        --ag: 211;
+        --ab: 238;
+        --acr: var(--ar), var(--ag), var(--ab);
+        --ac: rgb(var(--ar), var(--ag), var(--ab));
+        --display: "Chakra Petch", "Arial Narrow", system-ui, sans-serif;
+        --body:
+          "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+        --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+        --u: min(1vw, 1.7778vh);
+        --ease: cubic-bezier(0.16, 1, 0.3, 1);
+        --spring: cubic-bezier(0.22, 1.15, 0.36, 1);
+        color-scheme: dark;
+        transition:
+          --ar 0.9s var(--ease),
+          --ag 0.9s var(--ease),
+          --ab 0.9s var(--ease);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      html {
+        background: var(--bg);
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--body);
+        font-size: max(14px, calc(var(--u) * 1.28));
+        line-height: 1.5;
+        overflow: hidden;
+        isolation: isolate;
+      }
+      ::selection {
+        background: rgba(var(--acr), 0.35);
+        color: #fff;
+      }
+      #net {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: -20%;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.95;
+        background:
+          radial-gradient(
+            42% 38% at 78% 8%,
+            rgba(var(--acr), 0.22),
+            transparent 62%
+          ),
+          radial-gradient(
+            36% 42% at 8% 92%,
+            rgba(167, 139, 250, 0.16),
+            transparent 68%
+          ),
+          radial-gradient(
+            28% 30% at 50% 50%,
+            rgba(244, 114, 182, 0.07),
+            transparent 70%
+          );
+        animation: aurora 22s ease-in-out infinite alternate;
+        will-change: transform;
+      }
+      @keyframes aurora {
+        from {
+          transform: translate3d(-2%, 1%, 0) scale(1);
+        }
+        to {
+          transform: translate3d(3%, -2%, 0) scale(1.06);
+        }
+      }
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.045;
+        mix-blend-mode: overlay;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='.9'/></svg>");
+      }
+      h1,
+      h2,
+      h3,
+      h4 {
+        font-family: var(--display);
+        line-height: 1.08;
+        margin: 0;
+        text-wrap: balance;
+        letter-spacing: -0.02em;
+      }
+      h1 {
+        font-size: 3.4em;
+        font-weight: 700;
+      }
+      h2 {
+        font-size: 2.7em;
+        font-weight: 700;
+      }
+      h3 {
+        font-size: 1.35em;
+        font-weight: 600;
+      }
+      h4 {
+        font-size: 1.05em;
+        font-weight: 600;
+      }
+      p {
+        margin: 0;
+      }
+      .kicker {
+        font-family: var(--mono);
+        font-size: 0.7em;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--ac);
+        display: flex;
+        align-items: center;
+        gap: 0.7em;
+      }
+      .kicker::before {
+        content: "";
+        width: 2.4em;
+        height: 2px;
+        border-radius: 99px;
+        background: var(--ac);
+        box-shadow: 0 0 16px var(--ac);
+        animation: kline 2.4s var(--ease) infinite alternate;
+      }
+      @keyframes kline {
+        from {
+          width: 1.2em;
+          opacity: 0.55;
+        }
+        to {
+          width: 2.6em;
+          opacity: 1;
+        }
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .sub {
+        color: var(--muted);
+        font-size: 1.05em;
+        max-width: 60ch;
+      }
+      code,
+      .mono {
+        font-family: var(--mono);
+      }
+      .cy {
+        color: var(--cy);
+      }
+      .vi {
+        color: var(--vi);
+      }
+      .pk {
+        color: var(--pk);
+      }
+      .li {
+        color: var(--li);
+      }
+      .am {
+        color: var(--am);
+      }
+      .rd {
+        color: var(--rd);
+      }
+      .card.c-cy,
+      .c-cy {
+        --c: 34, 211, 238;
+      }
+      .card.c-vi,
+      .c-vi {
+        --c: 167, 139, 250;
+      }
+      .card.c-pk,
+      .c-pk {
+        --c: 244, 114, 182;
+      }
+      .card.c-li,
+      .c-li {
+        --c: 163, 230, 53;
+      }
+      .card.c-am,
+      .c-am {
+        --c: 251, 191, 36;
+      }
+      .card.c-rd,
+      .c-rd {
+        --c: 251, 113, 133;
+      }
+      .grad {
+        background: linear-gradient(
+          110deg,
+          var(--cy),
+          var(--vi) 45%,
+          var(--pk)
+        );
+        background-size: 200% 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: gradshift 8s ease-in-out infinite alternate;
+      }
+      @keyframes gradshift {
+        from {
+          background-position: 0% 50%;
+        }
+        to {
+          background-position: 100% 50%;
+        }
+      }
+      .hint {
+        display: flex;
+        align-items: center;
+        gap: 0.55em;
+        color: var(--muted);
+        font-size: 0.78em;
+        letter-spacing: 0.04em;
+      }
+      kbd {
+        font-family: var(--mono);
+        font-size: 0.85em;
+        border: 1px solid var(--line);
+        background: rgba(16, 26, 51, 0.7);
+        border-radius: 0.4em;
+        padding: 0.12em 0.45em;
+        box-shadow: 0 2px 0 rgba(255, 255, 255, 0.06);
+      }
+
+      /* stage — GPU transforms only, no blur (blur was the jank) */
+      .slide {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        display: flex;
+        visibility: hidden;
+        opacity: 0;
+        pointer-events: none;
+        padding: 4.2em 5.5em calc(5.4em + env(safe-area-inset-bottom, 0px));
+        transform: translate3d(calc(var(--dir, 1) * 4.5%), 0, 0) scale(0.97);
+        transition:
+          opacity 0.55s var(--ease),
+          transform 0.85s var(--spring),
+          visibility 0s 0.85s;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(var(--acr), 0.35) transparent;
+      }
+      .slide.active {
+        visibility: visible;
+        opacity: 1;
+        pointer-events: auto;
+        z-index: 2;
+        transform: translate3d(0, 0, 0) scale(1);
+        transition:
+          opacity 0.5s var(--ease),
+          transform 0.85s var(--spring);
+      }
+      .slide.leaving {
+        visibility: visible;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 3;
+        transform: translate3d(calc(var(--dir, 1) * -5%), 0, 0) scale(0.985);
+      }
+      .slide::after {
+        content: attr(data-n);
+        position: fixed;
+        right: 0.1em;
+        bottom: -0.08em;
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 13em;
+        line-height: 0.72;
+        color: rgba(var(--acr), 0.055);
+        pointer-events: none;
+        z-index: -1;
+        letter-spacing: -0.06em;
+      }
+      .wrap {
+        margin: auto;
+        width: 100%;
+        max-width: 78em;
+        display: flex;
+        flex-direction: column;
+        gap: 1.3em;
+      }
+      .head {
+        display: flex;
+        flex-direction: column;
+        gap: 0.55em;
+      }
+      .rise {
+        opacity: 1;
+      }
+      .slide.active .rise {
+        animation: rise 0.95s var(--spring) backwards;
+        animation-delay: calc(var(--i, 0) * 70ms + 90ms);
+      }
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translate3d(0, 1.8em, 0);
+        }
+        to {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+        }
+      }
+      .slide.active h2,
+      .slide.active h1 {
+        animation: wipe 1s var(--ease) backwards 0.08s;
+      }
+      @keyframes wipe {
+        from {
+          clip-path: inset(0 100% 0 0);
+          transform: translate3d(-0.6em, 0, 0);
+        }
+        to {
+          clip-path: inset(0 0 0 0);
+          transform: none;
+        }
+      }
+
+      /* chrome */
+      .prog {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        z-index: 9;
+        width: 0;
+        background: linear-gradient(90deg, var(--cy), var(--vi), var(--pk));
+        background-size: 200% 100%;
+        box-shadow: 0 0 18px rgba(var(--acr), 0.85);
+        transition: width 0.8s var(--ease);
+        animation: gradshift 7s linear infinite;
+      }
+      .bar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1em;
+        padding: 0.75em 16px calc(0.85em + env(safe-area-inset-bottom, 0px));
+        background: linear-gradient(
+          transparent,
+          rgba(5, 7, 15, 0.55) 35%,
+          rgba(5, 7, 15, 0.92)
+        );
+      }
+      .bar button {
+        font: inherit;
+        font-family: var(--mono);
+        font-size: 0.78em;
+        color: var(--ink);
+        background: rgba(12, 20, 42, 0.72);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 0.62em 1.25em;
+        cursor: pointer;
+        min-width: 6.8em;
+        transition:
+          transform 0.45s var(--spring),
+          border-color 0.3s,
+          box-shadow 0.4s,
+          background 0.3s;
+        backdrop-filter: blur(16px) saturate(1.2);
+      }
+      .bar button:hover:not(:disabled) {
+        border-color: var(--ac);
+        transform: translate3d(0, -3px, 0);
+        box-shadow:
+          0 10px 28px -12px var(--ac),
+          0 0 0 1px rgba(var(--acr), 0.25);
+      }
+      .bar button:active:not(:disabled) {
+        transform: translate3d(0, 0, 0) scale(0.97);
+      }
+      .bar button:disabled {
+        opacity: 0.28;
+        cursor: default;
+      }
+      .dots {
+        display: flex;
+        gap: 0.38em;
+        align-items: center;
+        max-width: 46vw;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 0.35em 0.55em;
+        background: rgba(10, 16, 36, 0.45);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        backdrop-filter: blur(14px);
+      }
+      .dots i {
+        width: 0.48em;
+        height: 0.48em;
+        border-radius: 50%;
+        background: rgba(130, 160, 230, 0.32);
+        cursor: pointer;
+        transition:
+          transform 0.5s var(--spring),
+          background 0.35s,
+          box-shadow 0.4s,
+          width 0.5s var(--spring);
+      }
+      .dots i:hover {
+        transform: scale(1.35);
+      }
+      .dots i.on {
+        width: 1.15em;
+        border-radius: 99px;
+        background: var(--ac);
+        box-shadow: 0 0 14px var(--ac);
+        transform: none;
+        animation: dotglow 2.4s ease-in-out infinite;
+      }
+      @keyframes dotglow {
+        50% {
+          box-shadow: 0 0 22px var(--ac);
+        }
+      }
+      .count {
+        font-family: var(--mono);
+        font-size: 0.78em;
+        color: var(--muted);
+        min-width: 4.5em;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+      }
+      button:focus-visible,
+      a:focus-visible,
+      [tabindex]:focus-visible,
+      input:focus-visible,
+      summary:focus-visible {
+        outline: 2px solid var(--ac);
+        outline-offset: 3px;
+      }
+
+      /* cards */
+      .g2,
+      .g3,
+      .g4,
+      .g5 {
+        display: grid;
+        gap: 1.1em;
+      }
+      .g2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .g3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .g4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+      .g5 {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+      .card {
+        --c: 34, 211, 238;
+        --rx: 0deg;
+        --ry: 0deg;
+        --lift: 0px;
+        position: relative;
+        overflow: hidden;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.55em;
+        text-align: left;
+        font: inherit;
+        color: inherit;
+        background: linear-gradient(
+          165deg,
+          rgba(28, 44, 88, 0.58),
+          rgba(8, 14, 32, 0.72)
+        );
+        backdrop-filter: blur(18px) saturate(1.25);
+        border: 1px solid rgba(var(--c), 0.34);
+        border-radius: 1.25em;
+        padding: 1.2em 1.3em;
+        box-shadow:
+          0 22px 50px -32px rgba(var(--c), 0.75),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        transform: perspective(1100px) rotateX(var(--rx)) rotateY(var(--ry))
+          translate3d(0, var(--lift), 0);
+        transition:
+          border-color 0.4s var(--ease),
+          box-shadow 0.5s var(--ease),
+          background 0.4s;
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.5s var(--ease);
+        background: radial-gradient(
+          20em circle at var(--mx, 50%) var(--my, 0%),
+          rgba(var(--c), 0.26),
+          transparent 62%
+        );
+      }
+      .card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        border-radius: inherit;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+      }
+      .card:hover {
+        --lift: -6px;
+        border-color: rgba(var(--c), 0.85);
+        box-shadow:
+          0 28px 64px -24px rgba(var(--c), 0.95),
+          inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      }
+      .card:hover::before {
+        opacity: 1;
+      }
+      .card h3,
+      .card h4 {
+        color: rgb(var(--c));
+      }
+      .card .tag {
+        font-family: var(--mono);
+        font-size: 0.64em;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .card.sm {
+        padding: 0.9em 1em;
+      }
+      .ic {
+        width: 2.6em;
+        height: 2.6em;
+        border-radius: 0.85em;
+        display: grid;
+        place-items: center;
+        background: rgba(var(--c, 34, 211, 238), 0.14);
+        border: 1px solid rgba(var(--c, 34, 211, 238), 0.45);
+        color: rgb(var(--c, 34, 211, 238));
+        flex: none;
+        transition:
+          transform 0.5s var(--spring),
+          box-shadow 0.4s;
+      }
+      .card:hover .ic {
+        transform: translate3d(0, -2px, 0);
+        box-shadow: 0 8px 18px -10px rgb(var(--c));
+      }
+      .ic svg {
+        width: 58%;
+        height: 58%;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.7;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      button.card {
+        cursor: pointer;
+      }
+      .btn {
+        --c: 34, 211, 238;
+        font: inherit;
+        font-size: 0.82em;
+        font-family: var(--mono);
+        color: var(--ink);
+        background: rgba(16, 26, 51, 0.7);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 0.5em 1.1em;
+        cursor: pointer;
+        transition:
+          transform 0.4s var(--spring),
+          border-color 0.3s,
+          background 0.3s,
+          box-shadow 0.4s,
+          color 0.25s;
+      }
+      .btn:hover {
+        border-color: rgb(var(--c));
+        transform: translate3d(0, -1px, 0);
+      }
+      .btn:active {
+        transform: scale(0.97);
+      }
+      .btn.on {
+        background: rgb(var(--c));
+        color: #04101a;
+        border-color: rgb(var(--c));
+        font-weight: 600;
+        box-shadow: 0 0 24px -4px rgba(var(--c), 0.85);
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6em;
+        align-items: center;
+      }
+      .panel {
+        background: rgba(6, 10, 24, 0.66);
+        backdrop-filter: blur(16px) saturate(1.2);
+        border: 1px solid var(--line);
+        border-radius: 1.25em;
+        padding: 1.2em 1.4em;
+        min-width: 0;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      }
+      .callout {
+        border: 1px solid rgba(251, 191, 36, 0.55);
+        background: linear-gradient(
+          135deg,
+          rgba(251, 191, 36, 0.12),
+          rgba(251, 191, 36, 0.04)
+        );
+        border-radius: 1.15em;
+        padding: 0.95em 1.3em;
+        display: flex;
+        gap: 1em;
+        align-items: center;
+        box-shadow: 0 16px 40px -28px rgba(251, 191, 36, 0.6);
+      }
+      .callout b {
+        color: var(--am);
+      }
+      .callout .ic {
+        --c: 251, 191, 36;
+      }
+      .pill {
+        display: inline-block;
+        font-family: var(--mono);
+        font-size: 0.62em;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 0.32em 0.85em;
+        border-radius: 999px;
+        border: 1px solid currentColor;
+        background: rgba(255, 255, 255, 0.03);
+      }
+      ul.clean {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+      }
+      ul.clean li {
+        position: relative;
+        padding-left: 1.2em;
+      }
+      ul.clean li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.55em;
+        width: 0.5em;
+        height: 0.5em;
+        border-radius: 50%;
+        background: rgb(var(--c, 34, 211, 238));
+        box-shadow: 0 0 10px rgb(var(--c, 34, 211, 238));
+      }
+      .pre {
+        font-family: var(--mono);
+        font-size: 0.78em;
+        background: #04070f;
+        border: 1px solid var(--line);
+        border-radius: 0.9em;
+        padding: 0.85em 1em;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        word-break: break-word;
+        color: var(--ink);
+      }
+      .hl {
+        background: rgba(251, 113, 133, 0.28);
+        color: #ffd2da;
+        border-radius: 0.3em;
+        padding: 0 0.25em;
+      }
+      .ok {
+        background: rgba(163, 230, 53, 0.2);
+        color: #e1ffb0;
+        border-radius: 0.3em;
+        padding: 0 0.25em;
+      }
+      input.pre {
+        width: 100%;
+        color: var(--ink);
+      }
+      .more {
+        display: none;
+        font-size: 0.88em;
+        color: var(--muted);
+      }
+      .card.on .more {
+        display: block;
+      }
+      .card.on {
+        border-color: rgba(var(--c), 0.95);
+      }
+
+      /* slide 1 */
+      .hero {
+        display: grid;
+        grid-template-columns: 1.25fr 1fr;
+        gap: 3em;
+        align-items: center;
+      }
+      .term {
+        font-family: var(--mono);
+        font-size: 0.76em;
+        background: rgba(4, 7, 15, 0.85);
+        border: 1px solid var(--line);
+        border-radius: 0.9em;
+        overflow: hidden;
+        max-width: 34em;
+      }
+      .term .tb {
+        display: flex;
+        gap: 0.4em;
+        padding: 0.55em 0.8em;
+        background: rgba(255, 255, 255, 0.04);
+      }
+      .term .tb i {
+        width: 0.65em;
+        height: 0.65em;
+        border-radius: 50%;
+        background: #fb7185;
+      }
+      .term .tb i:nth-child(2) {
+        background: #fbbf24;
+      }
+      .term .tb i:nth-child(3) {
+        background: #a3e635;
+      }
+      .term pre {
+        margin: 0;
+        padding: 0.8em 1em;
+        min-height: 5.6em;
+        white-space: pre-wrap;
+        color: var(--li);
+      }
+      .term pre b {
+        color: var(--cy);
+        font-weight: 400;
+      }
+      .caret {
+        display: inline-block;
+        width: 0.55em;
+        height: 1.1em;
+        background: var(--li);
+        vertical-align: -0.2em;
+        animation: blink 1.05s steps(1) infinite;
+        border-radius: 1px;
+        box-shadow: 0 0 10px var(--li);
+      }
+      @keyframes blink {
+        50% {
+          opacity: 0;
+        }
+      }
+      .shieldwrap {
+        position: relative;
+        width: 100%;
+        max-width: 24em;
+        justify-self: center;
+        aspect-ratio: 1;
+        filter: drop-shadow(0 20px 40px rgba(34, 211, 238, 0.18));
+      }
+      .shieldwrap svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+      .radar {
+        position: absolute;
+        inset: 6%;
+        border-radius: 50%;
+        background: conic-gradient(
+          from 0deg,
+          rgba(34, 211, 238, 0.42),
+          transparent 32%
+        );
+        animation: spin 6.5s linear infinite;
+        mask: radial-gradient(circle, transparent 38%, #000 39%);
+        will-change: transform;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .orbit {
+        animation: spin 22s linear infinite;
+        transform-origin: 200px 200px;
+        will-change: transform;
+      }
+      .orbit.r {
+        animation-duration: 34s;
+        animation-direction: reverse;
+      }
+      .float {
+        animation: float 5.5s ease-in-out infinite;
+        will-change: transform;
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translate3d(0, 0, 0);
+        }
+        50% {
+          transform: translate3d(0, -0.55em, 0);
+        }
+      }
+
+      /* agenda */
+      .ag {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1em;
+      }
+      .ag .card {
+        flex-direction: row;
+        align-items: center;
+        gap: 1em;
+        padding: 1em 1.2em;
+      }
+      .ag .num {
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 2.4em;
+        color: rgba(var(--c), 0.55);
+        min-width: 1.1em;
+      }
+      .ag .go {
+        margin-left: auto;
+        font-family: var(--mono);
+        font-size: 0.75em;
+        color: var(--muted);
+      }
+
+      /* poll */
+      .poll {
+        display: flex;
+        flex-direction: column;
+        gap: 0.55em;
+      }
+      .pb {
+        display: grid;
+        grid-template-columns: 8em 1fr 2.2em;
+        gap: 0.8em;
+        align-items: center;
+        font: inherit;
+        color: inherit;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--line);
+        border-radius: 0.9em;
+        padding: 0.55em 0.9em;
+        cursor: pointer;
+        text-align: left;
+        transition:
+          border-color 0.35s,
+          transform 0.45s var(--spring),
+          background 0.3s;
+      }
+      .pb:hover {
+        border-color: var(--ac);
+        transform: translate3d(4px, 0, 0);
+        background: rgba(var(--acr), 0.06);
+      }
+      .pb .t {
+        height: 0.7em;
+        border-radius: 99px;
+        background: rgba(130, 160, 230, 0.15);
+        overflow: hidden;
+      }
+      .pb .t i {
+        display: block;
+        height: 100%;
+        width: 0;
+        background: linear-gradient(90deg, var(--cy), var(--vi));
+        border-radius: 99px;
+        transition: width 0.7s var(--ease);
+      }
+      .pb b {
+        font-family: var(--mono);
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* flow */
+      .flow {
+        display: grid;
+        grid-template-columns: auto 1fr auto 1fr auto;
+        align-items: center;
+        gap: 0.5em;
+      }
+      .node {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.4em;
+        font-family: var(--display);
+        font-weight: 600;
+      }
+      .node .box {
+        width: 5em;
+        aspect-ratio: 1;
+        border-radius: 1.2em;
+        background: rgba(24, 38, 78, 0.7);
+        border: 1px solid var(--cy);
+        display: grid;
+        place-items: center;
+        color: var(--cy);
+        box-shadow: 0 0 30px -8px var(--cy);
+        animation: nodepulse 2.8s ease-in-out infinite;
+      }
+      @keyframes nodepulse {
+        50% {
+          box-shadow: 0 0 38px -4px var(--cy);
+          transform: scale(1.04);
+        }
+      }
+      .node .box svg {
+        width: 55%;
+        height: 55%;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.6;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .track {
+        position: relative;
+        height: 2.8em;
+        min-width: 3em;
+      }
+      .track::before,
+      .track::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        border-top: 2px dashed var(--line);
+      }
+      .track::before {
+        top: 30%;
+      }
+      .track::after {
+        top: 80%;
+      }
+      .dot {
+        position: absolute;
+        font-family: var(--mono);
+        font-size: 0.6em;
+        padding: 0.2em 0.6em;
+        border-radius: 999px;
+        white-space: nowrap;
+      }
+      .dot.req {
+        top: 0;
+        background: var(--cy);
+        color: #04202a;
+        animation: go 3.6s var(--ease) infinite;
+      }
+      .dot.res {
+        top: 52%;
+        background: var(--li);
+        color: #14200a;
+        animation: back 3.6s var(--ease) infinite 1.8s;
+      }
+      @keyframes go {
+        0% {
+          left: 0;
+          opacity: 0;
+        }
+        12% {
+          opacity: 1;
+        }
+        82% {
+          opacity: 1;
+        }
+        100% {
+          left: calc(100% - 5em);
+          opacity: 0;
+        }
+      }
+      @keyframes back {
+        0% {
+          left: calc(100% - 5em);
+          opacity: 0;
+        }
+        12% {
+          opacity: 1;
+        }
+        82% {
+          opacity: 1;
+        }
+        100% {
+          left: 0;
+          opacity: 0;
+        }
+      }
+
+      /* CIA */
+      .tri {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+        gap: 2.5em;
+        align-items: center;
+      }
+      .tri svg {
+        width: 100%;
+        max-width: 28em;
+        height: auto;
+        justify-self: center;
+        overflow: visible;
+      }
+      .tri .n {
+        cursor: pointer;
+      }
+      .tri .n circle {
+        fill: #12204a;
+        stroke: var(--line);
+        stroke-width: 2;
+        transition:
+          fill 0.4s,
+          stroke 0.4s,
+          filter 0.5s;
+      }
+      .tri .n.on circle,
+      .tri .n:hover circle {
+        stroke: var(--cy);
+        fill: #14346a;
+        filter: drop-shadow(0 0 14px var(--cy));
+      }
+      .tri .n text {
+        fill: var(--ink);
+        font-family: var(--display);
+        font-weight: 600;
+        font-size: 14px;
+        text-anchor: middle;
+        pointer-events: none;
+      }
+      .tri .tt {
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 48px;
+        text-anchor: middle;
+        fill: var(--cy);
+      }
+      .tri .edge {
+        stroke-dasharray: 8 8;
+        animation: dash 2s linear infinite;
+      }
+      @keyframes dash {
+        to {
+          stroke-dashoffset: -32;
+        }
+      }
+
+      /* castle + risk */
+      .castle {
+        width: 100%;
+        height: auto;
+        max-height: 10.5em;
+        overflow: visible;
+      }
+      .raider {
+        animation: raid 3.8s var(--ease) infinite;
+      }
+      @keyframes raid {
+        0% {
+          transform: translate3d(-30px, 0, 0);
+          opacity: 0;
+        }
+        15% {
+          opacity: 1;
+        }
+        100% {
+          transform: translate3d(150px, 0, 0);
+          opacity: 0.1;
+        }
+      }
+      .gate {
+        transition: transform 0.7s var(--spring);
+        transform-origin: 200px 250px;
+      }
+      .castle.locked .gate {
+        transform: scaleY(1);
+      }
+      .castle.open .gate {
+        transform: scaleY(0.12);
+      }
+      .castle.locked .raider {
+        animation-name: bounce;
+      }
+      @keyframes bounce {
+        0% {
+          transform: translate3d(-30px, 0, 0);
+          opacity: 0;
+        }
+        15% {
+          opacity: 1;
+        }
+        55% {
+          transform: translate3d(70px, 0, 0);
+          opacity: 1;
+        }
+        100% {
+          transform: translate3d(30px, 0, 0);
+          opacity: 0;
+        }
+      }
+      input[type="range"] {
+        width: 100%;
+        accent-color: var(--ac);
+      }
+      .meter {
+        height: 0.9em;
+        border-radius: 99px;
+        background: rgba(130, 160, 230, 0.15);
+        overflow: hidden;
+      }
+      .meter i {
+        display: block;
+        height: 100%;
+        width: 10%;
+        background: var(--li);
+        transition:
+          width 0.6s var(--ease),
+          background 0.5s;
+        border-radius: 99px;
+      }
+
+      /* attacks */
+      .chips {
+        display: flex;
+        gap: 0.5em;
+        flex-wrap: wrap;
+      }
+      .atk {
+        transition:
+          opacity 0.45s var(--ease),
+          transform 0.5s var(--spring),
+          border-color 0.3s,
+          box-shadow 0.4s;
+      }
+      .atk.hide {
+        display: none;
+      }
+      .atk .ds {
+        border-top: 1px dashed var(--line);
+        padding-top: 0.5em;
+        font-size: 0.88em;
+      }
+      .atk .ds b {
+        color: var(--li);
+      }
+
+      /* demos */
+      .demo {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.1em;
+      }
+      .browser {
+        border: 1px solid var(--line);
+        border-radius: 1em;
+        overflow: hidden;
+        background: rgba(4, 7, 15, 0.8);
+      }
+      .browser .url {
+        display: flex;
+        gap: 0.6em;
+        align-items: center;
+        padding: 0.55em 0.9em;
+        background: rgba(255, 255, 255, 0.05);
+        font-family: var(--mono);
+        font-size: 0.74em;
+        border-bottom: 1px solid var(--line);
+      }
+      .browser .url span {
+        background: rgba(0, 0, 0, 0.4);
+        border-radius: 99px;
+        padding: 0.2em 0.8em;
+        flex: 1;
+      }
+      .browser .pg {
+        padding: 1em 1.2em;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+        min-height: 8em;
+      }
+      .status {
+        font-family: var(--mono);
+        font-size: 0.78em;
+        padding: 0.2em 0.7em;
+        border-radius: 0.5em;
+        align-self: flex-start;
+      }
+      .status.ok2 {
+        background: rgba(163, 230, 53, 0.18);
+        color: var(--li);
+      }
+      .status.bad {
+        background: rgba(251, 113, 133, 0.2);
+        color: var(--rd);
+      }
+      .stepper {
+        display: flex;
+        align-items: center;
+        gap: 0.4em;
+      }
+      .stepper button {
+        width: 2em;
+        height: 2em;
+        border-radius: 50%;
+        border: 1px solid var(--line);
+        background: rgba(16, 26, 51, 0.8);
+        color: var(--ink);
+        cursor: pointer;
+        font: inherit;
+      }
+      .stepper button:hover {
+        border-color: var(--ac);
+      }
+
+      /* password */
+      .strength {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.35em;
+      }
+      .strength i {
+        height: 0.55em;
+        border-radius: 99px;
+        background: rgba(130, 160, 230, 0.18);
+        transition: background 0.3s;
+      }
+      .fac {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1em;
+      }
+      .fac .card {
+        align-items: center;
+        text-align: center;
+      }
+
+      /* email */
+      .mail {
+        background: #f4f6fb;
+        color: #1a2238;
+        border-radius: 1em;
+        overflow: hidden;
+        font-size: 0.88em;
+        min-width: 0;
+        box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.8);
+      }
+      .mail .mh {
+        background: #dfe5f3;
+        padding: 0.7em 1em;
+        display: flex;
+        flex-direction: column;
+        gap: 0.15em;
+        font-size: 0.9em;
+      }
+      .mail .mb {
+        padding: 1em 1.2em;
+        display: flex;
+        flex-direction: column;
+        gap: 0.7em;
+      }
+      .mail .cta {
+        align-self: flex-start;
+        background: #e5484d;
+        color: #fff;
+        font: inherit;
+        font-weight: 600;
+        border: 0;
+        border-radius: 0.5em;
+        padding: 0.6em 1.2em;
+        cursor: pointer;
+      }
+      .mail .stat {
+        background: #1a2238;
+        color: #cfe3ff;
+        font-family: var(--mono);
+        font-size: 0.8em;
+        padding: 0.5em 1em;
+        min-height: 2.3em;
+        word-break: break-all;
+      }
+      .mail [data-flag] {
+        transition: all 0.3s;
+      }
+      .mail [data-flag].lit {
+        outline: 3px solid var(--am);
+        outline-offset: 3px;
+        border-radius: 0.4em;
+        background: rgba(251, 191, 36, 0.35);
+      }
+      .qs {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6em;
+      }
+      .q {
+        text-align: left;
+        font: inherit;
+        font-size: 0.92em;
+        color: var(--ink);
+        background: rgba(16, 26, 51, 0.7);
+        border: 1px solid var(--line);
+        border-radius: 1em;
+        padding: 0.8em 1em;
+        cursor: pointer;
+        transition:
+          border-color 0.35s,
+          background 0.35s,
+          transform 0.45s var(--spring);
+        display: flex;
+        flex-direction: column;
+        gap: 0.25em;
+      }
+      .q:hover {
+        transform: translate3d(4px, 0, 0);
+      }
+      .q.on {
+        border-color: var(--am);
+        background: rgba(251, 191, 36, 0.1);
+      }
+      .q .a {
+        display: none;
+        color: var(--am);
+        font-size: 0.9em;
+      }
+      .q.on .a {
+        display: block;
+      }
+
+      /* timeline */
+      .tl {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 0.6em;
+        position: relative;
+      }
+      .tl::before {
+        content: "";
+        position: absolute;
+        left: 4%;
+        right: 4%;
+        top: 1.6em;
+        height: 2px;
+        background: var(--line);
+      }
+      .tl .fill {
+        position: absolute;
+        left: 4%;
+        top: 1.6em;
+        height: 2px;
+        width: 0;
+        background: linear-gradient(90deg, var(--am), var(--rd));
+        box-shadow: 0 0 12px var(--rd);
+        transition: width 0.8s var(--ease);
+      }
+      .st {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5em;
+        text-align: center;
+        font: inherit;
+        color: var(--muted);
+        background: none;
+        border: 0;
+        cursor: pointer;
+        position: relative;
+      }
+      .st .b {
+        width: 3.2em;
+        height: 3.2em;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: #0c1430;
+        border: 2px solid var(--line);
+        color: var(--muted);
+        transition:
+          transform 0.5s var(--spring),
+          border-color 0.35s,
+          background 0.35s,
+          color 0.35s,
+          box-shadow 0.45s;
+      }
+      .st .b svg {
+        width: 55%;
+        height: 55%;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.7;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .st.done .b {
+        border-color: var(--am);
+        color: var(--am);
+      }
+      .st.on .b {
+        border-color: var(--rd);
+        color: #fff;
+        background: var(--rd);
+        box-shadow: 0 0 26px var(--rd);
+        transform: scale(1.15);
+      }
+      .st.on {
+        color: var(--ink);
+      }
+      .st span {
+        font-size: 0.78em;
+        font-family: var(--display);
+        font-weight: 600;
+      }
+
+      /* checklist + quiz */
+      .chk {
+        display: flex;
+        gap: 0.8em;
+        align-items: center;
+        text-align: left;
+        font: inherit;
+        color: var(--ink);
+        background: rgba(16, 26, 51, 0.6);
+        border: 1px solid var(--line);
+        border-radius: 0.9em;
+        padding: 0.6em 0.9em;
+        cursor: pointer;
+        transition:
+          border-color 0.35s,
+          background 0.35s,
+          transform 0.4s var(--spring);
+      }
+      .chk:hover {
+        transform: translate3d(3px, 0, 0);
+      }
+      .chk .bx {
+        width: 1.5em;
+        height: 1.5em;
+        border-radius: 0.4em;
+        border: 2px solid var(--muted);
+        display: grid;
+        place-items: center;
+        flex: none;
+        transition: all 0.2s;
+        color: transparent;
+      }
+      .chk .bx svg {
+        width: 80%;
+        height: 80%;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .chk.on {
+        border-color: var(--li);
+        background: rgba(163, 230, 53, 0.08);
+      }
+      .chk.on .bx {
+        background: var(--li);
+        border-color: var(--li);
+        color: #10200a;
+      }
+      .ring {
+        width: 9em;
+        height: 9em;
+        flex: none;
+      }
+      .ring circle {
+        fill: none;
+        stroke-width: 10;
+        stroke-linecap: round;
+      }
+      .ring .bgc {
+        stroke: rgba(130, 160, 230, 0.18);
+      }
+      .ring .fgc {
+        stroke: var(--li);
+        stroke-dasharray: 314;
+        stroke-dashoffset: 314;
+        transform: rotate(-90deg);
+        transform-origin: 50% 50%;
+        transition: stroke-dashoffset 0.9s var(--ease);
+      }
+      .ring text {
+        fill: var(--ink);
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 26px;
+        text-anchor: middle;
+      }
+      .opt {
+        display: flex;
+        gap: 0.8em;
+        align-items: center;
+        text-align: left;
+        font: inherit;
+        color: var(--ink);
+        background: rgba(16, 26, 51, 0.7);
+        border: 1px solid var(--line);
+        border-radius: 0.9em;
+        padding: 0.7em 1em;
+        cursor: pointer;
+        transition:
+          border-color 0.3s,
+          background 0.3s,
+          transform 0.4s var(--spring);
+      }
+      .opt:hover:not(:disabled) {
+        border-color: var(--ac);
+        transform: translate3d(4px, 0, 0);
+      }
+      .opt .k {
+        font-family: var(--mono);
+        width: 1.8em;
+        height: 1.8em;
+        border-radius: 0.5em;
+        display: grid;
+        place-items: center;
+        background: rgba(130, 160, 230, 0.15);
+        flex: none;
+        font-size: 0.85em;
+      }
+      .opt.right {
+        border-color: var(--li);
+        background: rgba(163, 230, 53, 0.12);
+      }
+      .opt.wrong {
+        border-color: var(--rd);
+        background: rgba(251, 113, 133, 0.12);
+      }
+      .opt:disabled {
+        cursor: default;
+      }
+      .qprog {
+        display: flex;
+        gap: 0.35em;
+      }
+      .qprog i {
+        flex: 1;
+        height: 0.4em;
+        border-radius: 99px;
+        background: rgba(130, 160, 230, 0.18);
+      }
+      .qprog i.ok {
+        background: var(--li);
+      }
+      .qprog i.no {
+        background: var(--rd);
+      }
+      .qprog i.cur {
+        background: var(--ac);
+      }
+
+      .together {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 1.2em;
+        align-items: stretch;
+      }
+      .plus {
+        display: grid;
+        place-items: center;
+      }
+      .plus svg {
+        width: 7em;
+        height: 7em;
+        filter: drop-shadow(0 0 22px rgba(163, 230, 53, 0.7));
+        animation: float 5s ease-in-out infinite;
+      }
+      .big {
+        font-family: var(--display);
+        font-size: 3em;
+        line-height: 1;
+        font-weight: 700;
+      }
+
+      @media (min-width: 821px) {
+        .slide.dense {
+          font-size: 0.9em;
+        }
+        .slide.dense .card {
+          padding: 0.9em 1.1em;
+        }
+        .slide.dense .wrap {
+          gap: 0.95em;
+        }
+      }
+      @media (max-width: 820px) {
+        body {
+          font-size: 16px;
+          overflow: hidden;
+        }
+        .slide {
+          padding: 2.4em 16px 6em;
+        }
+        .slide::after {
+          font-size: 8em;
+        }
+        h1 {
+          font-size: 2.3em;
+        }
+        h2 {
+          font-size: 1.9em;
+        }
+        .g2,
+        .g3,
+        .g4,
+        .g5,
+        .hero,
+        .tri,
+        .demo,
+        .ag,
+        .together,
+        .fac {
+          grid-template-columns: 1fr;
+        }
+        .tl {
+          grid-template-columns: repeat(3, 1fr);
+          row-gap: 1.2em;
+        }
+        .tl::before,
+        .tl .fill {
+          display: none;
+        }
+        .flow {
+          grid-template-columns: 1fr;
+          justify-items: center;
+        }
+        .track {
+          display: none;
+        }
+        .shieldwrap {
+          max-width: 14em;
+          order: -1;
+        }
+        .dots {
+          display: none;
+        }
+        .pb {
+          grid-template-columns: 6em 1fr 2em;
+        }
+        .hint {
+          display: none;
+        }
+        .card:hover {
+          --lift: 0px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation: none !important;
+          transition: none !important;
+        }
+        .slide,
+        .slide.active,
+        .slide.leaving {
+          transform: none;
+          filter: none;
+        }
+      }
+
+      /* visual refinement */
+      :root {
+        --bg: #060916;
+        --muted: #a0afd0;
+        --line: rgba(156, 184, 238, 0.2);
+      }
+      body::before {
+        opacity: 0.78;
+        background:
+          radial-gradient(
+            42% 38% at 78% 8%,
+            rgba(var(--acr), 0.19),
+            transparent 62%
+          ),
+          radial-gradient(
+            36% 42% at 8% 92%,
+            rgba(167, 139, 250, 0.13),
+            transparent 68%
+          ),
+          radial-gradient(
+            28% 30% at 50% 50%,
+            rgba(244, 114, 182, 0.055),
+            transparent 70%
+          );
+      }
+      .wrap {
+        max-width: 82em;
+        gap: 1.5em;
+      }
+      .hero {
+        grid-template-columns: minmax(0, 1.2fr) minmax(18em, 0.8fr);
+        gap: clamp(2em, 5vw, 5em);
+      }
+      .hero h1 {
+        max-width: 15ch;
+        font-size: clamp(3em, 5vw, 4.65em);
+        line-height: 1;
+        letter-spacing: -0.045em;
+      }
+      .hero .sub {
+        max-width: 48ch;
+        line-height: 1.7;
+      }
+      .shieldwrap::before {
+        content: "";
+        position: absolute;
+        inset: 14%;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(34, 211, 238, 0.16),
+          rgba(167, 139, 250, 0.08) 48%,
+          transparent 72%
+        );
+        pointer-events: none;
+      }
+      .card {
+        background: linear-gradient(
+          155deg,
+          rgba(26, 40, 77, 0.72),
+          rgba(8, 14, 32, 0.84)
+        );
+        box-shadow:
+          0 18px 42px -30px rgba(var(--c), 0.65),
+          inset 0 1px 0 rgba(255, 255, 255, 0.09);
+      }
+      .panel {
+        background: linear-gradient(
+          145deg,
+          rgba(14, 22, 45, 0.82),
+          rgba(7, 11, 25, 0.8)
+        );
+        border-color: rgba(156, 184, 238, 0.22);
+      }
+      .bar {
+        gap: 0.8em;
+        padding-top: 1em;
+        background: linear-gradient(
+          transparent,
+          rgba(5, 7, 15, 0.68) 34%,
+          rgba(5, 7, 15, 0.96)
+        );
+      }
+      @media (max-width: 820px) {
+        .wrap {
+          gap: 1.2em;
+        }
+        .g2,
+        .g3,
+        .g4,
+        .g5,
+        .hero,
+        .tri,
+        .demo,
+        .ag,
+        .together,
+        .fac {
+          grid-template-columns: 1fr !important;
+        }
+        .hero {
+          gap: 1.3em;
+        }
+        .hero h1 {
+          max-width: 17ch;
+          font-size: clamp(2.25em, 7vw, 3em);
+          line-height: 1.04;
+        }
+        .hero .sub {
+          font-size: 1em;
+        }
+        .shieldwrap {
+          max-width: 9.5em;
+          order: 2;
+          justify-self: end;
+          margin: -0.35em 0.8em 0 auto;
+        }
+        .bar {
+          gap: 0.5em;
+          padding-right: 0.65em;
+          padding-left: 0.65em;
+        }
+        .bar button {
+          min-width: auto;
+          padding-right: 0.9em;
+          padding-left: 0.9em;
+          font-size: 0.72em;
+        }
+      }
+      @media (max-width: 480px) {
+        .slide {
+          padding-right: 14px;
+          padding-left: 14px;
+        }
+        .hero h1 {
+          font-size: 2.3em;
+        }
+        .term {
+          max-width: 100%;
+          font-size: 0.7em;
+        }
+        .count {
+          min-width: 3.8em;
+          font-size: 0.7em;
+        }
+        .bar button {
+          padding-right: 0.75em;
+          padding-left: 0.75em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="net" aria-hidden="true"></canvas>
+    <div class="prog" id="prog"></div>
+
+    <!-- 1 TITLE -->
+    <section class="slide" data-n="01" data-ac="34,211,238">
+      <div class="wrap">
+        <div class="hero">
+          <div class="head" style="gap: 1.2em">
+            <span class="kicker rise">Presentation</span>
+            <h1 class="rise" style="--i: 1">
+              Web Development <span class="cy">builds</span> the digital world
+              <span class="muted">&amp;</span>
+              <span class="pk">Cybersecurity</span> protects it
+            </h1>
+            <p class="sub rise" style="--i: 2">
+              How websites work, how they get attacked, and what each of us can
+              do about it.
+            </p>
+            <div class="row rise" style="--i: 3">
+              <span class="pill cy">Protect data</span
+              ><span class="pill vi">Prevent attacks</span
+              ><span class="pill li">Keep users safe</span
+              ><span class="pill pk">Build a safer web</span>
+            </div>
+            <div class="term rise" style="--i: 4">
+              <div class="tb"><i></i><i></i><i></i></div>
+              <pre id="typed"></pre>
+            </div>
+            <p class="hint rise" style="--i: 5">
+              Navigate with <kbd>←</kbd> <kbd>→</kbd> or swipe
+            </p>
+          </div>
+          <div class="shieldwrap rise" style="--i: 2">
+            <div class="radar"></div>
+            <svg viewBox="0 0 400 400" aria-hidden="true">
+              <g
+                class="orbit"
+                fill="none"
+                stroke="rgba(130,160,230,.35)"
+                stroke-width="1.5"
+              >
+                <circle cx="200" cy="200" r="185" stroke-dasharray="3 12" />
+                <circle cx="200" cy="15" r="7" fill="#a78bfa" stroke="none" />
+                <circle cx="385" cy="200" r="5" fill="#f472b6" stroke="none" />
+              </g>
+              <g
+                class="orbit r"
+                fill="none"
+                stroke="rgba(130,160,230,.3)"
+                stroke-width="1.5"
+              >
+                <circle cx="200" cy="200" r="150" stroke-dasharray="2 9" />
+                <circle cx="50" cy="200" r="6" fill="#22d3ee" stroke="none" />
+                <circle cx="200" cy="350" r="4" fill="#a3e635" stroke="none" />
+              </g>
+              <g class="float">
+                <path
+                  d="M200 78 L300 112 V200 C300 258 256 297 200 322 C144 297 100 258 100 200 V112 Z"
+                  fill="#0f1b3d"
+                  stroke="#22d3ee"
+                  stroke-width="4"
+                />
+                <path
+                  d="M200 98 L284 126 V200 C284 246 249 279 200 300 C151 279 116 246 116 200 V126 Z"
+                  fill="none"
+                  stroke="rgba(34,211,238,.35)"
+                  stroke-width="1.5"
+                />
+                <rect
+                  x="168"
+                  y="190"
+                  width="64"
+                  height="52"
+                  rx="8"
+                  fill="#22d3ee"
+                />
+                <path
+                  d="M181 190 v-16 a19 19 0 0 1 38 0 v16"
+                  fill="none"
+                  stroke="#22d3ee"
+                  stroke-width="9"
+                />
+                <circle cx="200" cy="213" r="6.5" fill="#0f1b3d" />
+                <rect
+                  x="197"
+                  y="215"
+                  width="6"
+                  height="14"
+                  rx="3"
+                  fill="#0f1b3d"
+                />
+              </g>
+              <text
+                x="30"
+                y="110"
+                fill="#a78bfa"
+                font-family="JetBrains Mono,monospace"
+                font-size="22"
+              >
+                &lt;/&gt;
+              </text>
+              <text
+                x="318"
+                y="300"
+                fill="#f472b6"
+                font-family="JetBrains Mono,monospace"
+                font-size="22"
+              >
+                { }
+              </text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 AGENDA -->
+    <section class="slide" data-n="02" data-ac="167,139,250">
+      <div class="wrap">
+        <div class="head">
+          <span class="kicker rise">Roadmap</span>
+          <h2 class="rise" style="--i: 1">What we'll cover</h2>
+          <p class="sub rise" style="--i: 2">
+            Select any item to jump straight to it.
+          </p>
+        </div>
+        <div class="ag" id="agenda"></div>
+      </div>
+    </section>
+
+    <!-- 3 BEHIND THE SCREEN -->
+    <section class="slide dense" data-n="03" data-ac="34,211,238">
+      <div class="wrap">
+        <div class="head">
+          <span class="kicker rise">Warm-up</span>
+          <h2 class="rise" style="--i: 1">What happens behind the screen?</h2>
+        </div>
+        <div
+          class="g2"
+          style="grid-template-columns: 1.1fr 1fr; align-items: stretch"
+        >
+          <div class="panel rise" style="--i: 2">
+            <h3 style="margin-bottom: 0.3em">
+              Who here used a website or an app today?
+            </h3>
+            <p class="muted" style="font-size: 0.85em; margin-bottom: 0.8em">
+              Tap what you used. The tally is yours alone, in this tab.
+            </p>
+            <div class="poll" id="poll"></div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 1.1em">
+            <div class="card c-vi rise" style="--i: 3; flex: 1">
+              <div class="ic" data-ic="code"></div>
+              <span class="tag">Web development</span>
+              <h3>Building</h3>
+              <p>
+                Websites and web applications people use: pages, logic,
+                accounts, payments, data.
+              </p>
+            </div>
+            <div class="card c-pk rise" style="--i: 4; flex: 1">
+              <div class="ic" data-ic="shield"></div>
+              <span class="tag">Cybersecurity</span>
+              <h3>Protecting</h3>
+              <p>
+                Defending systems, websites, networks and data from threats and
+                from people who abuse them.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="callout rise" style="--i: 5">
+          <div class="ic" data-ic="zap"></div>
+          <p>
+            <b>Key idea.</b> Security should be considered from the start, not
+            after the problem happens.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 THREE PARTS -->
+    <section class="slide dense" data-n="04" data-ac="34,211,238">
+      <div class="wrap">
+        <div class="head">
+          <span class="kicker rise">Anatomy</span>
+          <h2 class="rise" style="--i: 1">
+            A website = <span class="cy">3 parts</span>
+          </h2>
+          <p class="sub rise" style="--i: 2">
+            Select a part to see what it does and what can go wrong there.
+          </p>
+        </div>
+        <div class="g3" id="parts">
+          <button class="card c-cy rise" style="--i: 2" data-k="front">
+            <div class="ic" data-ic="monitor"></div>
+            <span class="tag">1 · What the user sees</span>
+            <h3>Frontend</h3>
+            <p>
+              The page in the browser, built with
+              <code class="cy">HTML</code> for content,
+              <code class="vi">CSS</code> for style and
+              <code class="am">JavaScript</code> for interaction.
+            </p>
+          </button>
+          <button class="card c-vi rise" style="--i: 3" data-k="back">
+            <div class="ic" data-ic="server"></div>
+            <span class="tag">2 · The brain</span>
+            <h3>Backend</h3>
+            <p>
+              Receives requests, runs the logic and verifies permissions on a
+              server.
+            </p>
+          </button>
+          <button class="card c-li rise" style="--i: 4" data-k="db">
+            <div class="ic" data-ic="db"></div>
+            <span class="tag">3 · The memory</span>
+            <h3>Database</h3>
+            <p>
+              Stores, organizes and retrieves data, and protects sensitive data.
+            </p>
+          </button>
+        </div>
+        <div
+          class="panel rise"
+          style="--i: 5; min-height: 5.6em"
+          id="partInfo"
+          aria-live="polite"
+        ></div>
+        <div class="callout rise" style="--i: 6; flex-wrap: wrap">
+          <div class="ic" data-ic="zap"></div>
+          <div style="flex: 1; min-width: 14em">
+            <p>
+              We changed the Login button color. Did that change password
+              verification?
+            </p>
+          </div>
+          <button class="btn" id="loginTry">Change the color</button
+          ><span
+            id="loginOut"
+            class="mono muted"
+            style="font-size: 0.8em"
+          ></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 REQUEST RESPONSE -->
+    <section class="slide" data-n="05" data-ac="34,211,238">
+      <div class="wrap">
+        <div class="head">
+          <span class="kicker rise">The conversation</span>
+          <h2 class="rise" style="--i: 1">
+            Request <span class="cy">→</span> Response
+          </h2>
+        </div>
+        <div
+          class="flow rise"
+          style="--i: 2"
+          aria-label="Browser sends a request to the server, which queries the database and answers back"
+        >
+          <div class="node">
+            <div class="box">
+              <svg viewBox="0 0 24 24">
+                <rect x="3" y="4" width="18" height="13" rx="2" />
+                <path d="M8 21h8M12 17v4" />
+              </svg>
+            </div>
+            Browser
+          </div>
+          <div class="track">
+            <span class="dot req">GET /account</span
+            ><span class="dot res">200 OK</span>
+          </div>
+          <div class="node">
+            <div class="box">
+              <svg viewBox="0 0 24 24">
+                <rect x="3" y="3" width="18" height="7" rx="1.5" />
+                <rect x="3" y="14" width="18" height="7" rx="1.5" />
+                <path d="M7 6.5h.01M7 17.5h.01" />
+              </svg>
+            </div>
+            Server
+          </div>
+          <div class="track">
+            <span class="dot req">query</span><span class="dot res">rows</span>
+          </div>
+          <div class="node">
+            <div class="box">
+              <svg viewBox="0 0 24 24">
+                <ellipse cx="12" cy="5" rx="8" ry="3" />
+                <path
+                  d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"
+                />
+              </svg>
+            </div>
+            Database
+          </div>
+        </div>
+        <div class="g2" style="grid-template-columns: 1.2fr 1fr">
+          <div class="panel rise" style="--i: 3">
+            <div class="row" style="margin-bottom: 0.7em">
+              <button class="btn on" style="--c: 251, 113, 133" id="bHttp">
+                HTTP</button
+              ><button class="btn" style="--c: 163, 230, 53" id="bHttps">
+                HTTPS</button
+              ><span
+                class="muted"
+                id="protoNote"
+                style="font-size: 0.82em"
+              ></span>
+            </div>
+            <p
+              class="mono muted"
+              style="font-size: 0.68em; margin-bottom: 0.35em"
+            >
+              WHAT SOMEONE ON THE SAME PUBLIC WI-FI CAN READ
+            </p>
+            <div class="pre" id="wire"></div>
+          </div>
+          <div class="panel rise" style="--i: 4">
+            <p
+              class="mono muted"
+              style="font-size: 0.68em; margin-bottom: 0.5em"
+            >
+              STATUS CODES · SELECT ONE
+            </p>
+            <div class="chips" id="codes"></div>
+            <p
+              id="codeInfo"
+              style="margin-top: 0.7em; font-size: 0.9em"
+              aria-live="polite"
+            ></p>
+          </div>
+        </div>
+        <div class="callout rise" style="--i: 7">
+          <div class="ic" data-ic="lock"></div>
+          <p>
+            <b>Careful.</b> The padlock does not mean the site is trustworthy or
+            free of vulnerabilities. It only protects the connection.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 CIA -->
+    <section class="slide" data-n="06" data-ac="34,211,238">
+      <div class="wrap">
+        <div class="head">
+          <span class="kicker rise">Core model</span>
+          <h2 class="rise" style="--i: 1">
+            The <span class="cy">CIA</span> Triad
+          </h2>
+          <p class="sub rise" style="--i: 2">
+            Information security rests on three goals. Select a corner.
+          </p>
+        </div>
+        <div class="tri rise" style="--i: 3">
+          <svg
+            viewBox="0 0 400 360"
+            role="group"
+            aria-label="CIA triad diagram"
+          >
+            <polygon
+              class="edge"
+              points="200,50 60,300 340,300"
+              fill="rgba(34,211,238,.07)"
+              stroke="#22d3ee"
+              stroke-width="2.5"
+            />
+            <text class="tt" x="200" y="215">CIA</text>
+            <g
+              class="n"
+              data-k="c"
+              tabindex="0"
+              role="button"
+              aria-label="Confidentiality"
+            >
+              <circle cx="200" cy="50" r="44" />
+              <text x="200" y="47">Confiden-</text>
+              <text x="200" y="63">tiality</text>
+            </g>
+            <g
+              class="n"
+              data-k="i"
+              tabindex="0"
+              role="button"
+              aria-label="Integrity"
+            >
+              <circle cx="60" cy="300" r="44" />
+              <text x="60" y="305">Integrity</text>
+            </g>
+            <g
+              class="n"
+              data-k="a"
+              tabindex="0"
+              role="button"
+              aria-label="Availability"
+            >
+              <circle cx="340" cy="300" r="44" />
+              <text x="340" y="297">Availa-</text>
+              <text x="340" y="313">bility</text>
+            </g>
+          </svg>
+          <div
+            class="panel"
+            id="ciaInfo"
+            aria-live="polite"
+            style="min-height: 14em"
+          ></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 TVR -->
+    <section class="slide dense" data-n="07" data-ac="244,114,182">
+      <div class="wrap">
+        <div class="head">
+          <span class="kicker rise">Vocabulary</span>
+          <h2 class="rise" style="--i: 1">Threat · Vulnerability · Risk</h2>
+        </div>
+        <div class="g3">
+          <div class="card c-rd rise" style="--i: 2">
+            <div class="ic" data-ic="bug"></div>
+            <span class="tag">The attacker</span>
+            <h3>Threat</h3>
+            <p>Something that can cause harm.</p>
+          </div>
+          <div class="card c-vi rise" style="--i: 3">
+            <div class="ic" data-ic="key"></div>
+            <span class="tag">The weakness</span>
+            <h3>Vulnerability</h3>
+            <p>A weakness that can be exploited.</p>
+          </div>
+          <div class="card c-pk rise" style="--i: 4">
+            <div class="ic" data-ic="alert"></div>
+            <span class="tag">The consequence</span>
+            <h3>Risk</h3>
+            <p>The likelihood of harm and how big its impact is.</p>
+          </div>
+        </div>
+        <div class="g2 rise" style="--i: 5; grid-template-columns: 1fr 1.1fr">
+          <div class="panel">
+            <svg
+              class="castle open"
+              id="castle"
+              viewBox="0 0 400 220"
+              role="img"
+              aria-label="Castle with a gate and raiders"
+            >
+              <rect x="0" y="190" width="400" height="30" fill="#0b1328" />
+              <g fill="#15234d" stroke="#2f4a96" stroke-width="2">
+                <rect x="150" y="100" width="100" height="90" />
+                <rect x="130" y="70" width="34" height="120" />
+                <rect x="236" y="70" width="34" height="120" />
+                <path
+                  d="M130 70h34v-10h-6v6h-6v-6h-6v6h-6v-6h-4zM236 70h34v-10h-6v6h-6v-6h-6v6h-6v-6h-4z"
+                />
+              </g>
+              <g class="gate">
+                <rect
+                  x="184"
+                  y="136"
+                  width="32"
+                  height="54"
+                  rx="3"
+                  fill="#0d1838"
+                  stroke="#a78bfa"
+                  stroke-width="2"
+                />
+                <path
+                  d="M192 136v54M200 136v54M208 136v54"
+                  stroke="#a78bfa"
+                  stroke-width="1.5"
+                />
+              </g>
+              <g class="raider" fill="#fb7185">
+                <circle cx="30" cy="176" r="8" />
+                <rect x="24" y="184" width="12" height="8" rx="2" />
+              </g>
+              <g class="raider" fill="#fb7185" style="animation-delay: 0.7s">
+                <circle cx="8" cy="176" r="8" />
+                <rect x="2" y="184" width="12" height="8" rx="2" />
+              </g>
+              <circle
+                cx="200"
+                cy="160"
+                r="26"
+                fill="none"
+                stroke="#fb7185"
+                stroke-width="2"
+                opacity=".6"
+                class="pulse"
+              />
+            </svg>
+            <div
+              class="row"
+              style="justify-content: space-between; margin-top: 0.6em"
+            >
+              <span id="castleTxt" class="rd mono" style="font-size: 0.8em"
+                >Gate unlocked: vulnerability exposed</span
+              ><button class="btn" id="gateBtn">Lock the gate</button>
+            </div>
+          </div>
+          <div class="panel">
+            <h4 style="margin-bottom: 0.7em">Score a risk</h4>
+            <div style="display: grid; gap: 0.9em">
+              <label
+                >Likelihood: <b id="lkv" class="cy">3</b> / 5<input
+                  type="range"
+                  id="lk"
+                  min="1"
+                  max="5"
+                  value="3"
+              /></label>
+              <label
+                >Impact: <b id="imv" class="cy">3</b> / 5<input
+                  type="range"
+                  id="im"
+                  min="1"
+                  max="5"
+                  value="3"
+              /></label>
+              <div>
+                <div class="row" style="justify-content: space-between">
+                  <span class="mono">Risk = L × I = <b id="rs">9</b></span
+                  ><span class="pill" id="rl">Medium</span>
+                </div>
+                <div class="meter" style="margin-top: 0.5em">
+                  <i id="rm"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="callout rise" style="--i: 6">
+          <div class="ic" data-ic="zap"></div>
+          <p>
+            <b>Example.</b> A staff-only page that doesn't check permissions is
+            the <span class="vi">vulnerability</span>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8 ATTACKS -->
+    <section class="slide dense" data-n="08" data-ac="251,113,133">
+      <div class="wrap">
+        <div class="head">
+          <span class="kicker rise">Know the enemy</span>
+          <h2 class="rise" style="--i: 1">Common attacks</h2>
+          <div class="chips rise" style="--i: 2" id="atkChips"></div>
+        </div>
+        <div class="g4" id="atkGrid"></div>
+      </div>
+    </section>
+
+    <!-- 9 INJECTION -->
+    <section class="slide" data-n="09" data-ac="167,139,250">
+      <div class="wrap">
+        <div class="head">
+          <span class="kicker rise">Injection</span>
+          <h2 class="rise" style="--i: 1">
+            When input becomes <span class="vi">code</span>
+          </h2>
+          <p class="sub rise" style="--i: 2">
+            Prevention for SQL injection: <b>parameterized queries</b>. For XSS:
+            <b>output encoding</b>.
+          </p>
+        </div>
+        <div class="panel rise" style="--i: 3">
+          <div
+            class="row"
+            style="justify-content: space-between; margin-bottom: 0.8em"
+          >
+            <div class="row">
+              <button class="btn on" style="--c: 167, 139, 250" id="tSql">
+                SQL injection</button
+              ><button class="btn" style="--c: 167, 139, 250" id="tXss">
+                XSS
+              </button>
+            </div>
+            <div class="row">
+              <button class="btn on" style="--c: 251, 113, 133" id="sqlV">
+                Unsafe</button
+              ><button class="btn" style="--c: 163, 230, 53" id="sqlP">
+                Safe
+              </button>
+            </div>
+          </div>
+          <div class="row" style="margin-bottom: 0.8em; flex-wrap: nowrap">
+            <label
+              class="mono muted"
+              for="sqlIn"
+              style="font-size: 0.75em"
+              id="inLbl"
+              >name =</label
+            >
+            <input
+              id="sqlIn"
+              class="pre"
+              style="flex: 1"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <button class="btn" id="fillA">normal</button
+            ><button class="btn" id="fillB" style="--c: 251, 113, 133">
+              attack
+            </button>
+          </div>
+          <div class="pre" id="sqlQ"></div>
+          <p id="sqlR" style="margin-top: 0.7em" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 ACCESS CONTROL -->
+    <section class="slide" data-n="10" data-ac="251,113,133">
+      <div class="wrap">
+        <div class="head">
+          <span class="kicker rise">Access control</span>
+          <h2 class="rise" style="--i: 1">
+            Broken <span class="rd">Access Control</span>
+          </h2>
+          <p class="sub rise" style="--i: 2">
+            A student reaches data that isn't theirs. Hiding a button is not
+            enough: the server must check permissions on every request.
+          </p>
+        </div>
+        <div class="demo rise" style="--i: 3">
+          <div class="browser">
+            <div class="url">
+              <span id="idUrl">school.example/grades?id=1042</span>
+            </div>
+            <div class="pg">
+              <div class="stepper">
+                <span class="muted mono" style="font-size: 0.78em"
+                  >student id</span
+                ><button id="idMinus" aria-label="Previous id">−</button
+                ><b class="mono" id="idVal">1042</b
+                ><button id="idPlus" aria-label="Next id">+</button>
+              </div>
+              <span class="status ok2" id="idStatus">200 OK</span>
+              <div id="idBody"></div>
+            </div>
+          </div>
+          <div class="panel">
+            <h4 style="margin-bottom: 0.6em">Server side</h4>
+            <div class="row" style="margin-bottom: 0.8em">
+              <button class="btn on" style="--c: 251, 113, 133" id="acOff">
+                No permission check</button
+              ><button class="btn" style="--c: 163, 230, 53" id="acOn">
+                Check owner
+              </button>
+            </div>
+            <div class="pre" id="acCode"></div>
+            <p class="muted" style="font-size: 0.85em; margin-top: 0.7em">
+              You are signed in as student 1042. Try changing the id.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11 PASSWORDS -->
+    <section class="slide" data-n="11" data-ac="163,230,53">
+      <div class="wrap">
+        <div class="head">
+          <span class="kicker rise">Authentication</span>
+          <h2 class="rise" style="--i: 1">
+            Passwords &amp; <span class="li">MFA</span>
+          </h2>
+        </div>
+        <div class="g2" style="grid-template-columns: 1.15fr 1fr">
+          <div class="panel rise" style="--i: 2">
+            <h4 style="margin-bottom: 0.6em">
+              How long would a guess attack take?
+            </h4>
+            <div class="row" style="flex-wrap: nowrap">
+              <input
+                id="pw"
+                class="pre"
+                type="text"
+                value="Sunset-Falcon-Coffee-42"
+                autocomplete="off"
+                spellcheck="false"
+                aria-label="Sample password"
+              /><button class="btn" id="pwEye">hide</button>
+            </div>
+            <div class="strength" id="pwBars" style="margin: 0.8em 0">
+              <i></i><i></i><i></i><i></i><i></i>
+            </div>
+            <div class="row" style="justify-content: space-between">
+              <span class="mono" id="pwBits" style="font-size: 0.85em"></span
+              ><b id="pwTime" class="big" style="font-size: 1.7em"></b>
+            </div>
+            <p class="muted" style="font-size: 0.74em; margin-top: 0.7em">
+              Illustration only: an offline attack on a fast hash at 10 billion
+              guesses per second. Typed text stays in this page. Don't type a
+              real password into any demo.
+            </p>
+          </div>
+          <div class="card c-li rise" style="--i: 3">
+            <div class="ic" data-ic="key"></div>
+            <h3>What makes it strong</h3>
+            <ul class="clean">
+              <li>
+                <b>Length</b> beats cleverness. Four random words beat
+                <code>P@ssw0rd!</code>
+              </li>
+              <li>
+                <b>Unique</b> for every account, so one leak stays one leak
+              </li>
+              <li>
+                <b>Password manager</b> remembers them so you don't have to
+              </li>
+              <li><b>Never reuse</b> a password from another site</li>
+            </ul>
+          </div>
+        </div>
+        <div class="fac rise" style="--i: 4">
+          <div class="card c-cy sm">
+            <div class="ic" data-ic="key"></div>
+            <h4>Something you know</h4>
+            <p class="muted" style="font-size: 0.85em">Password or PIN</p>
+          </div>
+          <div class="card c-vi sm">
+            <div class="ic" data-ic="monitor"></div>
+            <h4>Something you have</h4>
+            <p class="muted" style="font-size: 0.85em">
+              Phone, security key, app code
+            </p>
+          </div>
+          <div class="card c-pk sm">
+            <div class="ic" data-ic="user"></div>
+            <h4>Something you are</h4>
+            <p class="muted" style="font-size: 0.85em">Fingerprint or face</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12 PHISHING -->
+    <section class="slide" data-n="12" data-ac="251,191,36">
+      <div class="wrap">
+        <div class="head">
+          <span class="kicker rise">Phishing</span>
+          <h2 class="rise" style="--i: 1">Don't trust every link</h2>
+          <p class="sub rise" style="--i: 2">
+            Educational simulation only: no real site, no data entered. Hover
+            the button, then select a question.
+          </p>
+        </div>
+        <div
+          class="g2"
+          style="grid-template-columns: 1.1fr 1fr; align-items: start"
+        >
+          <div class="mail rise" style="--i: 3">
+            <div class="mh">
+              <span
+                ><b>From:</b>
+                <span data-flag="sender"
+                  >Account Security &lt;support@acc0unt-verify.example&gt;</span
+                ></span
+              ><span
+                ><b>Subject:</b>
+                <span data-flag="urgent"
+                  >URGENT: Your account will be suspended</span
+                ></span
+              >
+            </div>
+            <div class="mb">
+              <p>
+                <span data-flag="urgent2"
+                  >Notice: Your account needs verification.</span
+                >
+                Click here to review your account and avoid service suspension
+                within 24 hours.
+              </p>
+              <button class="cta" id="phish" data-flag="link">
+                Review my account
+              </button>
+              <p style="font-size: 0.85em; color: #55607d" data-flag="extra">
+                Dear customer, please also confirm your password and the code we
+                sent you.
+              </p>
+            </div>
+            <div class="stat" id="phStatus">
+              Hover the button to see where it really goes
+            </div>
+          </div>
+          <div class="qs rise" style="--i: 4" id="qs">
+            <button class="q" data-t="urgent urgent2">
+              <b>Is the message pushing me to act fast?</b
+              ><span class="a"
+                >Yes. A deadline and a threat are designed to stop you
+                thinking.</span
+              >
+            </button>
+            <button class="q" data-t="sender">
+              <b>Is the sender clear?</b
+              ><span class="a"
+                >No. "acc0unt" uses a zero, and the domain is not the
+                company's.</span
+              >
+            </button>
+            <button class="q" data-t="link">
+              <b>Where does the link really go?</b
+              ><span class="a"
+                >The real address differs from the button text. Check it before
+                clicking.</span
+              >
+            </button>
+            <button class="q" data-t="extra">
+              <b>Is there another way to check?</b
+              ><span class="a"
+                >Yes. Open the official app or type the address yourself.</span
+              >
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13 WARNING SIGNS -->
+    <section class="slide" data-n="13" data-ac="163,230,53">
+      <div class="wrap">
+        <div class="head">
+          <span class="kicker rise">Spot it</span>
+          <h2 class="rise" style="--i: 1">
+            <span class="li">Warning</span> Signs
+          </h2>
+          <p class="sub rise" style="--i: 2">
+            Select a card for a real-world example.
+          </p>
+        </div>
+        <div class="g5" id="signs">
+          <button class="card c-rd rise" style="--i: 2">
+            <div class="ic" data-ic="clock"></div>
+            <h3>1. Urgency</h3>
+            <p class="more">
+              "Act in 10 minutes or lose access." Pressure replaces judgment.
+            </p>
+          </button>
+          <button class="card c-vi rise" style="--i: 3">
+            <div class="ic" data-ic="user"></div>
+            <h3>2. Unexpected sender</h3>
+            <p class="more">
+              A "delivery company" you never ordered from, or a "teacher" on a
+              free mail address.
+            </p>
+          </button>
+          <button class="card c-cy rise" style="--i: 4">
+            <div class="ic" data-ic="link"></div>
+            <h3>3. The link</h3>
+            <p class="more">
+              Shortened or look-alike addresses. The visible text and the
+              destination don't match.
+            </p>
+          </button>
+          <button class="card c-pk rise" style="--i: 5">
+            <div class="ic" data-ic="lock"></div>
+            <h3>4. Request for sensitive data</h3>
+            <p class="more">
+              Passwords, codes and card numbers are never requested by message.
+            </p>
+          </button>
+          <button class="card c-am rise" style="--i: 6">
+            <div class="ic" data-ic="eye"></div>
+            <h3>5. Odd details</h3>
+            <p class="more">
+              Spelling slips, generic greetings, wrong logos, strange
+              formatting.
+            </p>
+          </button>
+        </div>
+        <div class="card c-li rise" style="--i: 7">
+          <h3>The right response</h3>
+          <div class="g5" style="gap: 0.8em">
+            <div class="row" style="flex-wrap: nowrap">
+              <span class="ic" data-ic="x"></span><span>Don't click</span>
+            </div>
+            <div class="row" style="flex-wrap: nowrap">
+              <span class="ic" data-ic="globe"></span
+              ><span>Open the official app or type the address yourself</span>
+            </div>
+            <div class="row" style="flex-wrap: nowrap">
+              <span class="ic" data-ic="key"></span
+              ><span>Never share passwords or verification codes</span>
+            </div>
+            <div class="row" style="flex-wrap: nowrap">
+              <span class="ic" data-ic="user"></span
+              ><span>Contact the organization through official channels</span>
+            </div>
+            <div class="row" style="flex-wrap: nowrap">
+              <span class="ic" data-ic="flag"></span
+              ><span>Report the message</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 14 BREACH -->
+    <section class="slide" data-n="14" data-ac="251,113,133">
+      <div class="wrap">
+        <div class="head">
+          <span class="kicker rise">Anatomy of a breach</span>
+          <h2 class="rise" style="--i: 1">
+            How one click becomes an <span class="rd">incident</span>
+          </h2>
+          <p class="sub rise" style="--i: 2">
+            A simplified attack chain. Each stage is a chance to stop it.
+          </p>
+        </div>
+        <div class="tl rise" style="--i: 3" id="tl">
+          <div class="fill" id="tlFill"></div>
+        </div>
+        <div class="g2 rise" style="--i: 4">
+          <div class="panel" style="min-height: 8em">
+            <span class="pill rd" id="tlTag"></span>
+            <h3 id="tlT" style="margin: 0.5em 0 0.3em"></h3>
+            <p id="tlD"></p>
+          </div>
+          <div
+            class="panel"
+            style="border-color: rgba(163, 230, 53, 0.5); min-height: 8em"
+          >
+            <span class="pill li">Break the chain here</span>
+            <p id="tlB" style="margin-top: 0.6em"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 15 DEFENSE -->
+    <section class="slide" data-n="15" data-ac="163,230,53">
+      <div class="wrap">
+        <div class="head">
+          <span class="kicker rise">Defense in depth</span>
+          <h2 class="rise" style="--i: 1">What good protection looks like</h2>
+        </div>
+        <div class="row rise" style="--i: 2">
+          <button class="btn on" id="dDev">If you build</button
+          ><button class="btn" id="dAll">If you use</button>
+        </div>
+        <div
+          class="g2 rise"
+          style="--i: 3; grid-template-columns: 1.6fr 1fr; align-items: center"
+        >
+          <div
+            style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.7em"
+            id="chkList"
+          ></div>
+          <div
+            class="panel"
+            style="display: flex; align-items: center; gap: 1.2em"
+          >
+            <svg
+              class="ring"
+              viewBox="0 0 120 120"
+              role="img"
+              aria-label="Checklist progress"
+            >
+              <circle class="bgc" cx="60" cy="60" r="50" />
+              <circle class="fgc" id="ringFg" cx="60" cy="60" r="50" />
+              <text x="60" y="68" id="ringTx">0%</text>
+            </svg>
+            <div>
+              <h3 id="ringT">Not started</h3>
+              <p class="muted" style="font-size: 0.88em" id="ringD">
+                Tick what you already do.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="callout rise" style="--i: 4">
+          <div class="ic" data-ic="shield"></div>
+          <p>
+            <b>Layers matter.</b> No single control is perfect. Secure code,
+            strong logins, monitoring and aware users mean one failure doesn't
+            become a breach.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 16 QUIZ -->
+    <section class="slide" data-n="16" data-ac="244,114,182">
+      <div class="wrap">
+        <div class="head">
+          <span class="kicker rise">Your turn</span>
+          <h2 class="rise" style="--i: 1">
+            Quick <span class="pk">Quiz</span>
+          </h2>
+        </div>
+        <div
+          class="panel rise"
+          style="
+            --i: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+            min-height: 19em;
+          "
+          id="quiz"
+        ></div>
+      </div>
+    </section>
+
+    <!-- 17 SHARED -->
+    <section class="slide" data-n="17" data-ac="163,230,53">
+      <div class="wrap">
+        <div class="head">
+          <span class="kicker rise">Takeaway</span>
+          <h2 class="rise" style="--i: 1">
+            Security is a <span class="li">shared</span> responsibility
+          </h2>
+        </div>
+        <div class="together">
+          <div class="card c-cy rise" style="--i: 2">
+            <div class="ic" data-ic="code"></div>
+            <h3>Web development</h3>
+            <p>Builds useful digital experiences.</p>
+          </div>
+          <div class="plus rise" style="--i: 3">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#a3e635"
+              stroke-width="1.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5z" />
+              <path d="M8.5 12l2.5 2.5 4.5-5" />
+            </svg>
+          </div>
+          <div class="card c-vi rise" style="--i: 4">
+            <div class="ic" data-ic="shield"></div>
+            <h3>Cybersecurity</h3>
+            <p>Protects those experiences and the people who use them.</p>
+          </div>
+        </div>
+        <div class="callout rise" style="--i: 5">
+          <div class="ic" data-ic="zap"></div>
+          <p>
+            <b>Security must be part of building the site from the start,</b>
+            not a step we think about after the problem happens.
+          </p>
+        </div>
+        <p class="muted rise" style="--i: 6">
+          Thank you for your time and participation.
+        </p>
+      </div>
+    </section>
+
+    <!-- 18 THANKS -->
+    <section class="slide" data-n="18" data-ac="34,211,238">
+      <div
+        class="wrap"
+        style="align-items: center; text-align: center; gap: 1.6em"
+      >
+        <svg
+          class="rise float"
+          style="--i: 0; width: 8em"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#22d3ee"
+          stroke-width="1.2"
+        >
+          <path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5z" />
+          <rect x="9" y="10.5" width="6" height="5" rx="1" fill="#22d3ee" />
+          <path d="M10 10.5V9a2 2 0 0 1 4 0v1.5" />
+        </svg>
+        <h1 class="rise" style="--i: 1; font-size: 4.6em">
+          Thanks for<br />your <span class="grad">attention</span>!
+        </h1>
+        <p class="sub rise" style="--i: 2">
+          Questions? Use the dots below to revisit any slide.
+        </p>
+        <button class="btn rise" style="--i: 3" id="restart">
+          Back to the start
+        </button>
+      </div>
+    </section>
+
+    <div class="bar">
+      <button id="prev" aria-label="Previous slide">← Prev</button>
+      <div class="dots" id="dots"></div>
+      <span class="count" id="count">1 / 18</span
+      ><button id="next" aria-label="Next slide">Next →</button>
+    </div>
+
+    <script>
+      (function () {
+        var $ = function (s, r) {
+            return (r || document).querySelector(s);
+          },
+          $$ = function (s, r) {
+            return [].slice.call((r || document).querySelectorAll(s));
+          };
+        var reduce =
+          window.matchMedia &&
+          matchMedia("(prefers-reduced-motion:reduce)").matches;
+        function esc(s) {
+          return String(s).replace(/[&<>"]/g, function (c) {
+            return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+          });
+        }
+
+        /* icons */
+        var IC = {
+          shield: '<path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5z"/>',
+          lock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+          key: '<circle cx="8" cy="15" r="4"/><path d="M10.8 12.2L20 3M16 7l3 3"/>',
+          mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+          link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+          bug: '<path d="M8 8a4 6 0 0 1 8 0v6a4 6 0 0 1-8 0zM12 8v12M3 10h5M16 10h5M4 18l4-2M20 18l-4-2M9 4l1.5 2M15 4l-1.5 2"/>',
+          server:
+            '<rect x="3" y="3" width="18" height="7" rx="1.5"/><rect x="3" y="14" width="18" height="7" rx="1.5"/><path d="M7 6.5h.01M7 17.5h.01"/>',
+          db: '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
+          monitor:
+            '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>',
+          eye: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+          alert: '<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/>',
+          clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+          user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',
+          code: '<path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/>',
+          globe:
+            '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',
+          wifi: '<path d="M2 9a15 15 0 0 1 20 0M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0M12 20h.01"/>',
+          zap: '<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
+          check: '<path d="M5 12l5 5 9-10"/>',
+          x: '<path d="M6 6l12 12M18 6L6 18"/>',
+          flag: '<path d="M5 21V4M5 4h12l-2 4 2 4H5"/>',
+          search: '<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',
+          up: '<path d="M12 19V5M5 12l7-7 7 7"/>',
+          eyeoff: '<path d="M3 3l18 18"/>',
+        };
+        function icon(n) {
+          return (
+            '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+            (IC[n] || "") +
+            "</svg>"
+          );
+        }
+        function paintIcons(r) {
+          $$("[data-ic]", r).forEach(function (e) {
+            if (!e.firstChild) e.innerHTML = icon(e.dataset.ic);
+            if (
+              e.classList.contains("ic") === false &&
+              e.tagName === "SPAN" &&
+              !e.className
+            )
+              e.className = "ic";
+          });
+        }
+        paintIcons();
+
+        /* nav */
+        var slides = $$(".slide"),
+          N = slides.length,
+          cur = -1,
+          hooks = {};
+        var dots = $("#dots");
+        slides.forEach(function (_, i) {
+          var d = document.createElement("i");
+          d.onclick = function () {
+            go(i);
+          };
+          dots.appendChild(d);
+        });
+        function go(n, fromHash) {
+          n = Math.max(0, Math.min(N - 1, n));
+          if (n === cur) return;
+          var prev = cur;
+          document.body.style.setProperty("--dir", n >= prev ? 1 : -1);
+          if (prev >= 0) {
+            var ps = slides[prev];
+            ps.classList.remove("active");
+            ps.classList.add("leaving");
+            setTimeout(function () {
+              ps.classList.remove("leaving");
+            }, 850);
+            if (hooks["off" + prev]) hooks["off" + prev]();
+          }
+          cur = n;
+          var s = slides[n];
+          s.classList.remove("leaving");
+          s.scrollTop = 0;
+          void s.offsetWidth;
+          s.classList.add("active");
+          var ac = s.dataset.ac || "34,211,238",
+            p = ac.split(",").map(Number);
+          document.documentElement.style.setProperty("--ar", p[0]);
+          document.documentElement.style.setProperty("--ag", p[1]);
+          document.documentElement.style.setProperty("--ab", p[2]);
+          targetCol = p;
+          $("#count").textContent = n + 1 + " / " + N;
+          $("#prev").disabled = n === 0;
+          $("#next").disabled = n === N - 1;
+          $("#prog").style.width = ((n + 1) / N) * 100 + "%";
+          $$("i", dots).forEach(function (d, i) {
+            d.classList.toggle("on", i === n);
+          });
+          if (hooks["on" + n]) hooks["on" + n]();
+          try {
+            if (!fromHash) history.replaceState(null, "", "#s" + (n + 1));
+          } catch (e) {}
+        }
+        $("#prev").onclick = function () {
+          go(cur - 1);
+        };
+        $("#next").onclick = function () {
+          go(cur + 1);
+        };
+        $("#restart").onclick = function () {
+          go(0);
+        };
+        document.addEventListener("keydown", function (e) {
+          if (e.target.matches && e.target.matches("input,textarea")) return;
+          if (
+            ["ArrowRight", "PageDown"].indexOf(e.key) > -1 ||
+            (e.key === " " && !e.target.closest("button"))
+          ) {
+            e.preventDefault();
+            go(cur + 1);
+          } else if (["ArrowLeft", "PageUp"].indexOf(e.key) > -1) {
+            e.preventDefault();
+            go(cur - 1);
+          } else if (e.key === "Home") go(0);
+          else if (e.key === "End") go(N - 1);
+        });
+        var tx = null,
+          ty = null;
+        document.addEventListener(
+          "touchstart",
+          function (e) {
+            tx = e.touches[0].clientX;
+            ty = e.touches[0].clientY;
+          },
+          { passive: true },
+        );
+        document.addEventListener(
+          "touchend",
+          function (e) {
+            if (tx === null) return;
+            var dx = e.changedTouches[0].clientX - tx,
+              dy = e.changedTouches[0].clientY - ty;
+            tx = null;
+            if (
+              Math.abs(dx) > 70 &&
+              Math.abs(dx) > Math.abs(dy) * 1.6 &&
+              !e.target.closest("input")
+            )
+              go(cur + (dx < 0 ? 1 : -1));
+          },
+          { passive: true },
+        );
+
+        /* card spotlight + smoothed tilt */
+        var tilt = { el: null, mx: 50, my: 0, tx: 0, ty: 0, rx: 0, ry: 0 };
+        document.addEventListener("pointermove", function (e) {
+          var c = e.target.closest && e.target.closest(".card");
+          if (!c) {
+            if (tilt.el) {
+              tilt.tx = 0;
+              tilt.ty = 0;
+            }
+            return;
+          }
+          tilt.el = c;
+          var r = c.getBoundingClientRect(),
+            x = e.clientX - r.left,
+            y = e.clientY - r.top;
+          tilt.mx = x;
+          tilt.my = y;
+          if (!reduce) {
+            tilt.ty = (x / r.width - 0.5) * 7;
+            tilt.tx = (0.5 - y / r.height) * 5;
+          }
+        });
+        document.addEventListener("pointerout", function (e) {
+          var c = e.target.closest && e.target.closest(".card");
+          if (c && !c.contains(e.relatedTarget)) {
+            tilt.tx = 0;
+            tilt.ty = 0;
+            if (tilt.el === c) {
+              /* keep el until rest */
+            }
+          }
+        });
+        (function tiltLoop() {
+          if (reduce) return;
+          tilt.rx += (tilt.tx - tilt.rx) * 0.14;
+          tilt.ry += (tilt.ty - tilt.ry) * 0.14;
+          if (tilt.el) {
+            tilt.el.style.setProperty("--mx", tilt.mx + "px");
+            tilt.el.style.setProperty("--my", tilt.my + "px");
+            tilt.el.style.setProperty("--rx", tilt.rx.toFixed(2) + "deg");
+            tilt.el.style.setProperty("--ry", tilt.ry.toFixed(2) + "deg");
+            if (
+              Math.abs(tilt.rx) < 0.02 &&
+              Math.abs(tilt.ry) < 0.02 &&
+              tilt.tx === 0 &&
+              tilt.ty === 0
+            ) {
+              tilt.el.style.setProperty("--rx", "0deg");
+              tilt.el.style.setProperty("--ry", "0deg");
+              tilt.el = null;
+            }
+          }
+          requestAnimationFrame(tiltLoop);
+        })();
+
+        /* network canvas */
+        var cv = $("#net"),
+          cx = cv.getContext("2d"),
+          W = 0,
+          H = 0,
+          pts = [],
+          mouse = { x: -999, y: -999, tx: -999, ty: -999 },
+          col = [34, 211, 238],
+          targetCol = [34, 211, 238],
+          run = true;
+        function size() {
+          var d = Math.min(window.devicePixelRatio || 1, 2);
+          W = innerWidth;
+          H = innerHeight;
+          cv.width = W * d;
+          cv.height = H * d;
+          cx.setTransform(d, 0, 0, d, 0, 0);
+          var n = Math.round(Math.min(80, (W * H) / 18000));
+          pts = [];
+          for (var i = 0; i < n; i++)
+            pts.push({
+              x: Math.random() * W,
+              y: Math.random() * H,
+              vx: (Math.random() - 0.5) * 0.22,
+              vy: (Math.random() - 0.5) * 0.22,
+              r: Math.random() * 1.5 + 0.7,
+            });
+        }
+        size();
+        addEventListener("resize", size);
+        addEventListener("pointermove", function (e) {
+          mouse.tx = e.clientX;
+          mouse.ty = e.clientY;
+        });
+        document.addEventListener("visibilitychange", function () {
+          run = !document.hidden;
+          if (run) frame();
+        });
+        function frame() {
+          if (!run) return;
+          mouse.x += (mouse.tx - mouse.x) * 0.08;
+          mouse.y += (mouse.ty - mouse.y) * 0.08;
+          for (var k = 0; k < 3; k++) col[k] += (targetCol[k] - col[k]) * 0.035;
+          var cr = col.map(Math.round).join(",");
+          cx.clearRect(0, 0, W, H);
+          var L = Math.min(140, W / 7.5);
+          for (var i = 0; i < pts.length; i++) {
+            var p = pts[i];
+            if (!reduce) {
+              p.x += p.vx;
+              p.y += p.vy;
+              if (p.x < 0 || p.x > W) p.vx *= -1;
+              if (p.y < 0 || p.y > H) p.vy *= -1;
+              var dx = p.x - mouse.x,
+                dy = p.y - mouse.y,
+                dd = dx * dx + dy * dy;
+              if (dd < 18000) {
+                p.x += dx * 0.0028;
+                p.y += dy * 0.0028;
+              }
+            }
+            for (var j = i + 1; j < pts.length; j++) {
+              var q = pts[j],
+                ax = p.x - q.x,
+                ay = p.y - q.y,
+                d2 = ax * ax + ay * ay;
+              if (d2 < L * L) {
+                cx.strokeStyle =
+                  "rgba(" +
+                  cr +
+                  "," +
+                  ((1 - Math.sqrt(d2) / L) * 0.22).toFixed(3) +
+                  ")";
+                cx.lineWidth = 1;
+                cx.beginPath();
+                cx.moveTo(p.x, p.y);
+                cx.lineTo(q.x, q.y);
+                cx.stroke();
+              }
+            }
+            cx.fillStyle = "rgba(" + cr + ",.7)";
+            cx.beginPath();
+            cx.arc(p.x, p.y, p.r, 0, 6.283);
+            cx.fill();
+          }
+          if (reduce) return;
+          requestAnimationFrame(frame);
+        }
+        frame();
+
+        /* S1 typewriter */
+        var lines = [
+            ["$", "GET /secure-web HTTP/2"],
+            ["<", "200 OK  [TLS 1.3 · encrypted]"],
+            ["$", "scan --vulnerabilities"],
+            ["<", "0 critical issues. Ship it safely."],
+          ],
+          typeT;
+        function typeIt() {
+          var el = $("#typed"),
+            li = 0,
+            ci = 0,
+            out = "";
+          clearTimeout(typeT);
+          var done = lines
+            .map(function (l) {
+              return "<b>" + esc(l[0]) + "</b> " + esc(l[1]);
+            })
+            .join("\n");
+          if (reduce) {
+            el.innerHTML = done;
+            return;
+          }
+          (function step() {
+            if (li >= lines.length) {
+              el.innerHTML = out + '<span class="caret"></span>';
+              return;
+            }
+            var l = lines[li];
+            ci++;
+            el.innerHTML =
+              out +
+              "<b>" +
+              esc(l[0]) +
+              "</b> " +
+              esc(l[1].slice(0, ci)) +
+              '<span class="caret"></span>';
+            if (ci >= l[1].length) {
+              out += "<b>" + esc(l[0]) + "</b> " + esc(l[1]) + "\n";
+              li++;
+              ci = 0;
+              typeT = setTimeout(step, 280);
+            } else {
+              var ch = l[1][ci - 1],
+                delay = /[.,]/.test(ch)
+                  ? 90
+                  : ch === " "
+                    ? 18
+                    : 16 + Math.random() * 10;
+              typeT = setTimeout(step, delay);
+            }
+          })();
+        }
+        hooks.on0 = typeIt;
+        hooks.off0 = function () {
+          clearTimeout(typeT);
+        };
+
+        /* S2 agenda */
+        var ag = [
+          ["How websites work", 3, "monitor", "c-cy"],
+          ["Core security ideas", 5, "shield", "c-vi"],
+          ["Attacks in the wild", 7, "bug", "c-rd"],
+          ["Phishing & people", 11, "mail", "c-am"],
+          ["Defense in depth", 14, "lock", "c-li"],
+          ["Quiz & takeaways", 15, "flag", "c-pk"],
+        ];
+        $("#agenda").innerHTML = ag
+          .map(function (a, i) {
+            return (
+              '<button class="card ' +
+              a[3] +
+              ' rise" style="--i:' +
+              (i + 2) +
+              '" data-go="' +
+              a[1] +
+              '"><span class="num">' +
+              (i + 1) +
+              '</span><div class="ic" data-ic="' +
+              a[2] +
+              '"></div><h3>' +
+              a[0] +
+              '</h3><span class="go">slide ' +
+              (a[1] + 1) +
+              " →</span></button>"
+            );
+          })
+          .join("");
+        paintIcons($("#agenda"));
+        $$("#agenda .card").forEach(function (b) {
+          b.onclick = function () {
+            go(+b.dataset.go);
+          };
+        });
+
+        /* S3 poll */
+        var pollItems = [
+            "Messaging",
+            "Video",
+            "Maps",
+            "School portal",
+            "Games",
+            "Banking",
+          ],
+          counts = pollItems.map(function () {
+            return 0;
+          });
+        function drawPoll() {
+          var mx = Math.max.apply(null, counts) || 1;
+          $("#poll").innerHTML = pollItems
+            .map(function (n, i) {
+              return (
+                '<button class="pb" data-i="' +
+                i +
+                '"><span>' +
+                n +
+                '</span><span class="t"><i style="width:' +
+                (counts[i] / mx) * 100 +
+                '%"></i></span><b>' +
+                counts[i] +
+                "</b></button>"
+              );
+            })
+            .join("");
+          $$("#poll .pb").forEach(function (b) {
+            b.onclick = function () {
+              counts[+b.dataset.i]++;
+              drawPoll();
+            };
+          });
+        }
+        counts = [3, 2, 1, 2, 1, 1];
+        drawPoll();
+
+        /* S4 parts */
+        var parts = {
+          front:
+            '<h4 class="cy">Frontend risks</h4><p>Everything here runs on the visitor\'s device, so a visitor can read and change it. Never trust it for security decisions and never hide secrets in it.</p>',
+          back: '<h4 class="vi">Backend risks</h4><p>The backend is the gatekeeper. It must check who you are and what you may do on every request, because anyone can send requests directly.</p>',
+          db: '<h4 class="li">Database risks</h4><p>The database holds the valuables: accounts, messages, payments. Limit access, encrypt sensitive fields and never build queries from raw user input.</p>',
+        };
+        function setPart(k) {
+          $$("#parts .card").forEach(function (b) {
+            b.classList.toggle("on", b.dataset.k === k);
+          });
+          $("#partInfo").innerHTML = parts[k];
+        }
+        $$("#parts .card").forEach(function (b) {
+          b.onclick = function () {
+            setPart(b.dataset.k);
+          };
+        });
+        setPart("front");
+        var lc = ["#e5484d", "#22d3ee", "#a3e635", "#a78bfa"],
+          li2 = 0;
+        $("#loginTry").onclick = function () {
+          li2 = (li2 + 1) % lc.length;
+          this.style.borderColor = lc[li2];
+          this.style.color = lc[li2];
+          $("#loginOut").textContent =
+            "Color changed. Password check: unchanged. That is the Backend's job.";
+        };
+
+        /* S5 http */
+        var wire = {
+          http: "POST /login HTTP/1.1\nHost: school.example\n\nemail=sara@example.com&password=MyPass123",
+          https:
+            "17 03 03 00 5A 9F C2 E1 7B 04 D8 3A 91 EE 60 B7\n4C 1D A2 F5 08 6E 93 CB 2F 7A 55 D0 E4 19 8C 3B …",
+        };
+        function proto(k) {
+          $("#bHttp").classList.toggle("on", k === "http");
+          $("#bHttps").classList.toggle("on", k === "https");
+          $("#wire").textContent = wire[k];
+          $("#wire").style.color = k === "http" ? "#ffd2da" : "#e1ffb0";
+          $("#protoNote").textContent =
+            k === "http"
+              ? "Readable by anyone on the path"
+              : "Encrypted: unreadable in transit";
+        }
+        $("#bHttp").onclick = function () {
+          proto("http");
+        };
+        $("#bHttps").onclick = function () {
+          proto("https");
+        };
+        proto("http");
+        var codes = {
+          200: ["OK", "The request worked and the server answered.", "li"],
+          301: ["Moved", "The page lives at a new address. Follow it.", "cy"],
+          403: [
+            "Forbidden",
+            "You are known, but not allowed. This is what a permission check returns.",
+            "am",
+          ],
+          404: ["Not found", "Nothing exists at that address.", "vi"],
+          500: [
+            "Server error",
+            "Something broke on the server. Often a bug.",
+            "rd",
+          ],
+        };
+        $("#codes").innerHTML = Object.keys(codes)
+          .map(function (k) {
+            return '<button class="btn" data-k="' + k + '">' + k + "</button>";
+          })
+          .join("");
+        function setCode(k) {
+          $$("#codes .btn").forEach(function (b) {
+            b.classList.toggle("on", b.dataset.k === k);
+          });
+          var c = codes[k];
+          $("#codeInfo").innerHTML =
+            '<b class="' + c[2] + '">' + k + " " + c[0] + ".</b> " + c[1];
+        }
+        $$("#codes .btn").forEach(function (b) {
+          b.onclick = function () {
+            setCode(b.dataset.k);
+          };
+        });
+        setCode("403");
+
+        /* S6 CIA */
+        var cia = {
+          c: [
+            "Confidentiality",
+            "Only the right people can see the data.",
+            "Stolen passwords, leaked records, eavesdropping.",
+            "Encryption, access control, MFA.",
+            "lock",
+          ],
+          i: [
+            "Integrity",
+            "Data stays accurate and unaltered.",
+            "Someone edits grades or a bank balance without permission.",
+            "Hashes, permissions, input validation, audit logs.",
+            "check",
+          ],
+          a: [
+            "Availability",
+            "Systems and data are there when needed.",
+            "Ransomware, DDoS floods, a crashed server with no backup.",
+            "Backups, redundancy, rate limiting, monitoring.",
+            "zap",
+          ],
+        };
+        function setCia(k) {
+          var d = cia[k];
+          $$(".tri .n").forEach(function (g) {
+            g.classList.toggle("on", g.dataset.k === k);
+          });
+          $("#ciaInfo").innerHTML =
+            '<div class="row" style="flex-wrap:nowrap;margin-bottom:.6em"><div class="ic" data-ic="' +
+            d[4] +
+            '"></div><h3 class="cy">' +
+            d[0] +
+            '</h3></div><p style="margin-bottom:.9em">' +
+            d[1] +
+            '</p><p><b class="rd">Attack.</b> ' +
+            d[2] +
+            '</p><p style="margin-top:.4em"><b class="li">Defense.</b> ' +
+            d[3] +
+            "</p>";
+          paintIcons($("#ciaInfo"));
+        }
+        $$(".tri .n").forEach(function (g) {
+          g.onclick = function () {
+            setCia(g.dataset.k);
+          };
+          g.onkeydown = function (e) {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              e.stopPropagation();
+              setCia(g.dataset.k);
+            }
+          };
+        });
+        setCia("c");
+
+        /* S7 */
+        function risk() {
+          var l = +$("#lk").value,
+            i = +$("#im").value,
+            s = l * i;
+          $("#lkv").textContent = l;
+          $("#imv").textContent = i;
+          $("#rs").textContent = s;
+          var lv =
+            s <= 4
+              ? ["Low", "#a3e635"]
+              : s <= 9
+                ? ["Medium", "#fbbf24"]
+                : s <= 16
+                  ? ["High", "#fb923c"]
+                  : ["Critical", "#fb7185"];
+          $("#rl").textContent = lv[0];
+          $("#rl").style.color = lv[1];
+          $("#rm").style.width = (s / 25) * 100 + "%";
+          $("#rm").style.background = lv[1];
+        }
+        $("#lk").oninput = risk;
+        $("#im").oninput = risk;
+        risk();
+        var locked = false;
+        $("#gateBtn").onclick = function () {
+          locked = !locked;
+          var c = $("#castle");
+          c.classList.toggle("locked", locked);
+          c.classList.toggle("open", !locked);
+          this.textContent = locked ? "Unlock the gate" : "Lock the gate";
+          var t = $("#castleTxt");
+          t.textContent = locked
+            ? "Gate locked: vulnerability fixed"
+            : "Gate unlocked: vulnerability exposed";
+          t.className = (locked ? "li" : "rd") + " mono";
+        };
+
+        /* S8 attacks */
+        var atk = [
+          [
+            "Phishing",
+            "mail",
+            "Social",
+            "c-am",
+            "A fake message tricks you into clicking or sharing secrets.",
+            "Check sender and link, use MFA, report it.",
+          ],
+          [
+            "SQL injection",
+            "db",
+            "Web",
+            "c-vi",
+            "Input is mixed into a database query and changes its meaning.",
+            "Parameterized queries, least-privilege database accounts.",
+          ],
+          [
+            "XSS",
+            "code",
+            "Web",
+            "c-pk",
+            "Attacker-written script runs in other visitors' browsers.",
+            "Encode output, Content Security Policy.",
+          ],
+          [
+            "DDoS",
+            "zap",
+            "Network",
+            "c-rd",
+            "A flood of traffic knocks a service offline.",
+            "Rate limiting, CDN, traffic filtering.",
+          ],
+          [
+            "Malware & ransomware",
+            "bug",
+            "Malware",
+            "c-rd",
+            "Malicious software spies, steals or locks your files.",
+            "Updates, offline backups, no unknown downloads.",
+          ],
+          [
+            "Man-in-the-middle",
+            "eye",
+            "Network",
+            "c-cy",
+            "Someone secretly sits between you and the site on open Wi-Fi.",
+            "HTTPS, VPN on public Wi-Fi, certificate warnings.",
+          ],
+          [
+            "Brute force",
+            "key",
+            "Social",
+            "c-li",
+            "Automated guessing of passwords until one works.",
+            "Long passwords, lockouts, MFA.",
+          ],
+          [
+            "Broken access control",
+            "lock",
+            "Web",
+            "c-vi",
+            "A user reaches functions or data they should not.",
+            "Server-side checks on every request.",
+          ],
+        ];
+        var cats = ["All", "Social", "Web", "Network", "Malware"];
+        $("#atkChips").innerHTML = cats
+          .map(function (c, i) {
+            return (
+              '<button class="btn' +
+              (i ? "" : " on") +
+              '" data-c="' +
+              c +
+              '">' +
+              c +
+              "</button>"
+            );
+          })
+          .join("");
+        $("#atkGrid").innerHTML = atk
+          .map(function (a, i) {
+            return (
+              '<div class="card atk ' +
+              a[3] +
+              ' rise" style="--i:' +
+              (i + 2) +
+              '" data-c="' +
+              a[2] +
+              '"><div class="ic" data-ic="' +
+              a[1] +
+              '"></div><span class="tag">' +
+              a[2] +
+              "</span><h4>" +
+              a[0] +
+              '</h4><p style="font-size:.88em">' +
+              a[4] +
+              '</p><p class="ds"><b>Defense.</b> ' +
+              a[5] +
+              "</p></div>"
+            );
+          })
+          .join("");
+        paintIcons($("#atkGrid"));
+        $$("#atkChips .btn").forEach(function (b) {
+          b.onclick = function () {
+            $$("#atkChips .btn").forEach(function (x) {
+              x.classList.toggle("on", x === b);
+            });
+            $$("#atkGrid .atk").forEach(function (c) {
+              c.classList.toggle(
+                "hide",
+                b.dataset.c !== "All" && c.dataset.c !== b.dataset.c,
+              );
+            });
+          };
+        });
+
+        /* S9 injection */
+        var tab = "sql",
+          safe = false,
+          users = ["alice", "bob", "carol"];
+        var presets = {
+          sql: ["alice", "' OR '1'='1", "name ="],
+          xss: [
+            "Great talk!",
+            "<scr" + "ipt>steal(document.cookie)</scr" + "ipt>",
+            "comment =",
+          ],
+        };
+        function setTab(t) {
+          tab = t;
+          $("#tSql").classList.toggle("on", t === "sql");
+          $("#tXss").classList.toggle("on", t === "xss");
+          $("#inLbl").textContent = presets[t][2];
+          $("#sqlIn").value = presets[t][1];
+          draw9();
+        }
+        function draw9() {
+          var v = $("#sqlIn").value;
+          $("#sqlV").classList.toggle("on", !safe);
+          $("#sqlP").classList.toggle("on", safe);
+          $("#sqlV").textContent =
+            tab === "sql" ? "Unsafe query" : "Unsafe output";
+          $("#sqlP").textContent =
+            tab === "sql" ? "Parameterized" : "Encoded output";
+          if (tab === "sql") {
+            if (!safe) {
+              var inj = /'\s*or\s*'?1'?\s*=\s*'?1/i.test(v),
+                rows = inj
+                  ? users
+                  : users.filter(function (u) {
+                      return u === v;
+                    });
+              $("#sqlQ").innerHTML =
+                'SELECT * FROM users WHERE name = \'<span class="hl">' +
+                esc(v) +
+                "</span>'";
+              $("#sqlR").innerHTML = inj
+                ? '<b class="rd">Returned all ' +
+                  rows.length +
+                  " users (" +
+                  rows.join(", ") +
+                  ").</b> The input changed the meaning of the query."
+                : "Returned: " + (rows.join(", ") || "no rows");
+            } else {
+              var r = users.filter(function (u) {
+                return u === v;
+              });
+              $("#sqlQ").innerHTML =
+                'SELECT * FROM users WHERE name = ?\n<span class="ok">value (data only): "' +
+                esc(v) +
+                '"</span>';
+              $("#sqlR").innerHTML =
+                '<b class="li">The input is treated as plain data.</b> Returned: ' +
+                (r.join(", ") || "no rows");
+            }
+          } else {
+            var hasTag = /<\s*script|on\w+\s*=|<\s*img/i.test(v);
+            if (!safe) {
+              $("#sqlQ").innerHTML =
+                'page.innerHTML = comment\n<span class="' +
+                (hasTag ? "hl" : "ok") +
+                '">' +
+                esc(v) +
+                "</span>";
+              $("#sqlR").innerHTML = hasTag
+                ? '<b class="rd">The browser would run this as code</b> for every visitor who opens the page, stealing sessions or redirecting them. (Shown as text here, never executed.)'
+                : "Shown as the comment: " + esc(v);
+            } else {
+              $("#sqlQ").innerHTML =
+                'page.textContent = comment\n<span class="ok">' +
+                esc(v) +
+                "</span>";
+              $("#sqlR").innerHTML =
+                '<b class="li">Special characters are encoded</b> (&amp;lt; &amp;gt;), so the comment displays as harmless text.';
+            }
+          }
+        }
+        $("#tSql").onclick = function () {
+          setTab("sql");
+        };
+        $("#tXss").onclick = function () {
+          setTab("xss");
+        };
+        $("#sqlV").onclick = function () {
+          safe = false;
+          draw9();
+        };
+        $("#sqlP").onclick = function () {
+          safe = true;
+          draw9();
+        };
+        $("#sqlIn").oninput = draw9;
+        $("#fillA").onclick = function () {
+          $("#sqlIn").value = presets[tab][0];
+          draw9();
+        };
+        $("#fillB").onclick = function () {
+          $("#sqlIn").value = presets[tab][1];
+          draw9();
+        };
+        setTab("sql");
+
+        /* S10 access control */
+        var ids = {
+            1042: ["Sara M.", "A-", "You"],
+            1043: ["Omar K.", "B+", "Another student"],
+            1044: ["Lina R.", "A", "Another student"],
+            1041: ["Youssef H.", "B", "Another student"],
+          },
+          checkOn = false,
+          sid = 1042;
+        function drawAc() {
+          $("#acOff").classList.toggle("on", !checkOn);
+          $("#acOn").classList.toggle("on", checkOn);
+          $("#idVal").textContent = sid;
+          $("#idUrl").textContent = "school.example/grades?id=" + sid;
+          var ok = !checkOn || sid === 1042,
+            d = ids[sid];
+          $("#idStatus").className = "status " + (ok ? "ok2" : "bad");
+          $("#idStatus").textContent = ok ? "200 OK" : "403 Forbidden";
+          $("#idBody").innerHTML = ok
+            ? "<b>" +
+              d[0] +
+              '</b> <span class="muted">· grade ' +
+              d[1] +
+              "</span>" +
+              (sid !== 1042
+                ? '<p class="rd" style="font-size:.85em;margin-top:.3em">This is someone else\'s record.</p>'
+                : "")
+            : '<span class="muted">You can only view your own record.</span>';
+          $("#acCode").innerHTML = checkOn
+            ? 'if (record.owner !== session.user) {\n  <span class="ok">return 403 Forbidden</span>\n}\nreturn record'
+            : '// no ownership check\nreturn <span class="hl">getRecord(id)</span>';
+        }
+        $("#acOff").onclick = function () {
+          checkOn = false;
+          drawAc();
+        };
+        $("#acOn").onclick = function () {
+          checkOn = true;
+          drawAc();
+        };
+        $("#idMinus").onclick = function () {
+          sid = Math.max(1041, sid - 1);
+          drawAc();
+        };
+        $("#idPlus").onclick = function () {
+          sid = Math.min(1044, sid + 1);
+          drawAc();
+        };
+        drawAc();
+
+        /* S11 password */
+        var common = [
+          "password",
+          "123456",
+          "qwerty",
+          "letmein",
+          "admin",
+          "welcome",
+          "iloveyou",
+          "abc123",
+        ];
+        function fmt(sec) {
+          if (sec < 1) return "Instantly";
+          var u = [
+            ["years", 31557600],
+            ["days", 86400],
+            ["hours", 3600],
+            ["minutes", 60],
+            ["seconds", 1],
+          ];
+          if (sec > 31557600 * 1e9) return "Billions of years+";
+          for (var i = 0; i < u.length; i++) {
+            if (sec >= u[i][1]) {
+              var v = sec / u[i][1];
+              return (
+                (v >= 100
+                  ? Math.round(v).toLocaleString("en-US")
+                  : v.toFixed(v < 10 ? 1 : 0)) +
+                " " +
+                u[i][0]
+              );
+            }
+          }
+          return "Instantly";
+        }
+        function pw() {
+          var v = $("#pw").value,
+            pool = 0;
+          if (/[a-z]/.test(v)) pool += 26;
+          if (/[A-Z]/.test(v)) pool += 26;
+          if (/[0-9]/.test(v)) pool += 10;
+          if (/[^A-Za-z0-9]/.test(v)) pool += 33;
+          var bits = v.length && pool ? v.length * Math.log2(pool) : 0,
+            isC = common.some(function (c) {
+              return (
+                v.toLowerCase().indexOf(c) === 0 && v.length < c.length + 4
+              );
+            });
+          if (isC) bits = Math.min(bits, 12);
+          var sec = Math.pow(2, bits) / 2 / 1e10,
+            sc = isC
+              ? 0
+              : bits < 28
+                ? 1
+                : bits < 45
+                  ? 2
+                  : bits < 65
+                    ? 3
+                    : bits < 80
+                      ? 4
+                      : 5,
+            cs = [
+              "#fb7185",
+              "#fb7185",
+              "#fb923c",
+              "#fbbf24",
+              "#a3e635",
+              "#22d3ee",
+            ];
+          $$("#pwBars i").forEach(function (b, i) {
+            b.style.background = i < sc ? cs[sc] : "";
+          });
+          $("#pwBits").textContent =
+            Math.round(bits) + " bits" + (isC ? " · common password" : "");
+          $("#pwTime").textContent = fmt(sec);
+          $("#pwTime").style.color = cs[sc] || "#fb7185";
+        }
+        $("#pw").oninput = pw;
+        pw();
+        var shown = true;
+        $("#pwEye").onclick = function () {
+          shown = !shown;
+          $("#pw").type = shown ? "text" : "password";
+          this.textContent = shown ? "hide" : "show";
+        };
+
+        /* S12 phishing */
+        var ph = $("#phish"),
+          st = $("#phStatus"),
+          real = "https://acc0unt-verify.example/login?session=8f3a…";
+        ph.onmouseenter = ph.onfocus = function () {
+          st.textContent = "→ " + real;
+        };
+        ph.onmouseleave = ph.onblur = function () {
+          st.textContent = "Hover the button to see where it really goes";
+        };
+        ph.onclick = function () {
+          st.textContent =
+            "Simulation: on a real phishing site this click would open a fake login page.";
+        };
+        $$("#qs .q").forEach(function (q) {
+          q.onclick = function () {
+            var on = !q.classList.contains("on");
+            $$("#qs .q").forEach(function (x) {
+              x.classList.remove("on");
+            });
+            $$(".mail .lit").forEach(function (x) {
+              x.classList.remove("lit");
+            });
+            if (on) {
+              q.classList.add("on");
+              q.dataset.t.split(" ").forEach(function (t) {
+                var el = $('.mail [data-flag="' + t + '"]');
+                if (el) el.classList.add("lit");
+              });
+            }
+          };
+        });
+
+        /* S13 */
+        $$("#signs .card").forEach(function (b) {
+          b.onclick = function () {
+            b.classList.toggle("on");
+          };
+        });
+
+        /* S14 breach timeline */
+        var tlS = [
+          [
+            "Recon",
+            "search",
+            "The attacker studies the target: staff names, tools, public posts.",
+            "Share less publicly; train staff to spot probing.",
+          ],
+          [
+            "Phish",
+            "mail",
+            "A convincing email arrives with an urgent link.",
+            "Mail filtering and the habit of verifying first.",
+          ],
+          [
+            "Foothold",
+            "key",
+            "Someone enters credentials or opens a file. The attacker logs in.",
+            "MFA: a stolen password alone is not enough.",
+          ],
+          [
+            "Escalate",
+            "up",
+            "The attacker hunts for broader permissions and weak spots.",
+            "Least privilege and fixed access control.",
+          ],
+          [
+            "Exfiltrate",
+            "db",
+            "Data is copied out or files are locked for ransom.",
+            "Encryption, backups and data-loss alerts.",
+          ],
+          [
+            "Detect",
+            "eye",
+            "Logs and alerts reveal the intrusion. Response begins.",
+            "Logging, monitoring and a rehearsed response plan.",
+          ],
+        ];
+        var tlBox = $("#tl");
+        tlS.forEach(function (s, i) {
+          var b = document.createElement("button");
+          b.className = "st";
+          b.dataset.i = i;
+          b.innerHTML =
+            '<div class="b">' + icon(s[1]) + "</div><span>" + s[0] + "</span>";
+          b.onclick = function () {
+            tlSet(i, true);
+          };
+          tlBox.appendChild(b);
+        });
+        var tlT,
+          tlI = 0;
+        function tlSet(i, manual) {
+          tlI = i;
+          $$("#tl .st").forEach(function (b, k) {
+            b.classList.toggle("done", k < i);
+            b.classList.toggle("on", k === i);
+          });
+          $("#tlFill").style.width = (92 * i) / 5 + "%";
+          var s = tlS[i];
+          $("#tlTag").textContent = "Stage " + (i + 1) + " of 6";
+          $("#tlT").textContent = s[0];
+          $("#tlD").textContent = s[2];
+          $("#tlB").textContent = s[3];
+          clearTimeout(tlT);
+          if (!manual && !reduce)
+            tlT = setTimeout(function () {
+              tlSet((i + 1) % 6);
+            }, 2600);
+          else if (manual && !reduce)
+            tlT = setTimeout(function () {
+              tlSet((i + 1) % 6);
+            }, 6000);
+        }
+        hooks.on13 = function () {
+          tlSet(0);
+        };
+        hooks.off13 = function () {
+          clearTimeout(tlT);
+        };
+
+        /* S15 checklists */
+        var lists = {
+          dev: [
+            "Check permissions on the server",
+            "Use parameterized queries",
+            "Hash passwords, never store plain text",
+            "Serve everything over HTTPS",
+            "Keep libraries updated",
+            "Log and monitor suspicious activity",
+            "Validate and encode all input",
+            "Test for the OWASP Top 10",
+          ],
+          all: [
+            "Unique password per account",
+            "Password manager in use",
+            "Two-step verification on",
+            "Phone and browser updated",
+            "Verify before clicking links",
+            "Never share codes",
+            "Avoid public Wi-Fi for banking",
+            "Report suspicious messages",
+          ],
+        };
+        var cl = "dev",
+          got = { dev: {}, all: {} };
+        var verdict = [
+          ["Not started", "Tick what you already do."],
+          ["Getting started", "Every habit counts. Pick one more."],
+          ["Solid base", "You cover the essentials."],
+          ["Strong", "Nearly everything is covered."],
+          ["Excellent", "Layers in place. Keep them current."],
+        ];
+        function drawCl() {
+          $("#dDev").classList.toggle("on", cl === "dev");
+          $("#dAll").classList.toggle("on", cl === "all");
+          $("#chkList").innerHTML = lists[cl]
+            .map(function (t, i) {
+              return (
+                '<button class="chk' +
+                (got[cl][i] ? " on" : "") +
+                '" data-i="' +
+                i +
+                '"><span class="bx">' +
+                icon("check") +
+                "</span><span>" +
+                t +
+                "</span></button>"
+              );
+            })
+            .join("");
+          $$("#chkList .chk").forEach(function (b) {
+            b.onclick = function () {
+              got[cl][b.dataset.i] = !got[cl][b.dataset.i];
+              drawCl();
+            };
+          });
+          var n = Object.keys(got[cl]).filter(function (k) {
+              return got[cl][k];
+            }).length,
+            p = Math.round((n / 8) * 100);
+          $("#ringFg").style.strokeDashoffset = 314 - (314 * p) / 100;
+          $("#ringTx").textContent = p + "%";
+          var v = verdict[n === 0 ? 0 : n < 3 ? 1 : n < 6 ? 2 : n < 8 ? 3 : 4];
+          $("#ringT").textContent = v[0];
+          $("#ringD").textContent = v[1];
+        }
+        $("#dDev").onclick = function () {
+          cl = "dev";
+          drawCl();
+        };
+        $("#dAll").onclick = function () {
+          cl = "all";
+          drawCl();
+        };
+        drawCl();
+
+        /* S16 quiz */
+        var qz = [
+          [
+            "Where must permission checks happen?",
+            [
+              "In the browser with JavaScript",
+              "On the server, for every request",
+              "In the CSS file",
+              "Only on the login page",
+            ],
+            1,
+            "The browser is controlled by the visitor. Only the server can enforce rules.",
+          ],
+          [
+            "Does HTTPS mean a website has no vulnerabilities?",
+            [
+              "Yes, it blocks all attacks",
+              "Yes, if the padlock is green",
+              "No, it only protects the connection",
+              "No, it only matters for images",
+            ],
+            2,
+            "HTTPS encrypts traffic and checks the site identity. The app itself can still be vulnerable.",
+          ],
+          [
+            "What attack tricks users with misleading messages or links?",
+            ["Phishing", "Backups", "Encryption", "Caching"],
+            0,
+            "Phishing is a form of social engineering.",
+          ],
+          [
+            "Best defense against SQL injection?",
+            [
+              "Hide the login button",
+              "Longer page titles",
+              "Parameterized queries",
+              "A faster server",
+            ],
+            2,
+            "Parameterized queries keep user input as data, never as part of the command.",
+          ],
+          [
+            "A DDoS attack mostly hits which CIA goal?",
+            ["Confidentiality", "Integrity", "Availability", "None of them"],
+            2,
+            "Flooding a service with traffic makes it unavailable to real users.",
+          ],
+        ];
+        var qi = 0,
+          qs2 = [],
+          qdone = false;
+        function drawQ() {
+          var box = $("#quiz");
+          if (qi >= qz.length) {
+            var sc = qs2.filter(Boolean).length;
+            box.innerHTML =
+              '<div style="text-align:center;margin:auto"><div class="big grad">' +
+              sc +
+              " / " +
+              qz.length +
+              '</div><h3 style="margin:.4em 0">' +
+              (sc === 5
+                ? "Perfect score"
+                : sc >= 3
+                  ? "Well done"
+                  : "Good start") +
+              '</h3><p class="muted" style="margin-bottom:1em">' +
+              (sc === 5
+                ? "You are ready to build and browse safely."
+                : "Revisit the slides and try again.") +
+              '</p><button class="btn on" id="qAgain">Try again</button></div>';
+            $("#qAgain").onclick = function () {
+              qi = 0;
+              qs2 = [];
+              drawQ();
+            };
+            return;
+          }
+          var q = qz[qi];
+          box.innerHTML =
+            '<div class="qprog">' +
+            qz
+              .map(function (_, i) {
+                return (
+                  '<i class="' +
+                  (i < qi ? (qs2[i] ? "ok" : "no") : i === qi ? "cur" : "") +
+                  '"></i>'
+                );
+              })
+              .join("") +
+            '</div><h3 style="color:var(--ink)">' +
+            (qi + 1) +
+            ". " +
+            q[0] +
+            '</h3><div class="g2" id="opts">' +
+            q[1]
+              .map(function (o, i) {
+                return (
+                  '<button class="opt" data-i="' +
+                  i +
+                  '"><span class="k">' +
+                  "ABCD"[i] +
+                  "</span><span>" +
+                  o +
+                  "</span></button>"
+                );
+              })
+              .join("") +
+            '</div><div id="fb" style="min-height:3.4em" aria-live="polite"></div>';
+          $$("#opts .opt").forEach(function (b) {
+            b.onclick = function () {
+              var a = +b.dataset.i,
+                ok = a === q[2];
+              qs2[qi] = ok;
+              $$("#opts .opt").forEach(function (x, i) {
+                x.disabled = true;
+                if (i === q[2]) x.classList.add("right");
+                else if (x === b) x.classList.add("wrong");
+              });
+              $("#fb").innerHTML =
+                '<p><b class="' +
+                (ok ? "li" : "rd") +
+                '">' +
+                (ok ? "Correct." : "Not quite.") +
+                "</b> " +
+                q[3] +
+                '</p><button class="btn on" id="qNext" style="margin-top:.5em">' +
+                (qi === qz.length - 1 ? "See score" : "Next question") +
+                "</button>";
+              $("#qNext").onclick = function () {
+                qi++;
+                drawQ();
+              };
+            };
+          });
+        }
+        drawQ();
+
+        var m = /^#s(\d+)$/.exec(location.hash);
+        go(m ? +m[1] - 1 : 0, true);
+      })();
+    </script>
+  </body>
+</html>
